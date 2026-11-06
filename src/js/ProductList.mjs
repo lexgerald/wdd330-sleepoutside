@@ -3,7 +3,7 @@ import { renderListWithTemplate } from "./utils.mjs";
 function productCardTemplate(product) {
   return `
     <li class="product-card">
-      <a href="product_pages/?products=${product.Id}">
+      <a href="../product_pages/?product=${product.Id}">
         <img src="${product.Image}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
         <h3>${product.Name}</h3>
@@ -23,6 +23,7 @@ export default class ProductList {
   async init() {
     const list = await this.dataSource.getData();
     this.renderList(list);
+    this.renderBreadcrumb(list);
   }
 
   renderList(list) {
@@ -30,8 +31,19 @@ export default class ProductList {
     // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
 
     // apply use new utility function instead of the commented code above
-    renderListWithTemplate(productCardTemplate, this.listElement, list);
+    renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
 
+  }
+
+  renderBreadcrumb(list) {
+    const breadcrumb = document.querySelector(".breadcrumb");
+    if (breadcrumb) {
+      const categoryName =
+        this.category.charAt(0).toUpperCase() + this.category.slice(1);
+      const count = list.length;
+      const countLabel = count === 1 ? "item" : "items";
+      breadcrumb.innerHTML = `<span class="breadcrumb-category">${categoryName}</span> &rarr; (${count} ${countLabel})`;
+    }
   }
 
 }
