@@ -29,6 +29,11 @@ export default class ProductDetails {
   }
 
   renderProductDetails() {
+    const breadcrumb = document.getElementById("breadcrumb-category");
+
+    if (breadcrumb) {
+      breadcrumb.textContent = "Tents";
+    }
     const product = this.product;
 
     document.querySelector(".product-detail").innerHTML = `
