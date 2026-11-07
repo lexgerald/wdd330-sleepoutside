@@ -1,6 +1,6 @@
 import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
-import Alert from './Alert.js';
+import Alert from "./Alert.js";
 
 const dataSource = new ProductData("tents");
 
@@ -19,7 +19,7 @@ function initNewsletter() {
   if (!form) return;
 
   const emailInput = document.getElementById("newsletter-email");
-  const message    = document.getElementById("newsletter-msg");
+  const message = document.getElementById("newsletter-msg");
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

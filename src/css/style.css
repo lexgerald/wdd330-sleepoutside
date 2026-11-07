@@ -262,7 +262,6 @@ footer {
   padding: 1em;
 }
 
-
 .newsletter {
   max-width: 480px;
   margin: 2rem auto;
@@ -271,7 +270,9 @@ footer {
   background: #f4f4f4;
   border-radius: 8px;
 }
-.newsletter h2 { margin-top: 0; }
+.newsletter h2 {
+  margin-top: 0;
+}
 .newsletter form {
   display: flex;
   gap: 0.5rem;
@@ -294,11 +295,63 @@ footer {
   cursor: pointer;
   font-size: 1rem;
 }
-.newsletter button:hover { background: #1f5673; }
-#newsletter-msg { min-height: 1.2em; font-weight: 600; }
-#newsletter-msg.success { color: #2e7d32; }
-#newsletter-msg.error   { color: #c62828; }
+.newsletter button:hover {
+  background: #1f5673;
+}
+#newsletter-msg {
+  min-height: 1.2em;
+  font-weight: 600;
+}
+#newsletter-msg.success {
+  color: #2e7d32;
+}
+#newsletter-msg.error {
+  color: #c62828;
+}
 .visually-hidden {
-  position: absolute; width: 1px; height: 1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Let the remove button possition itself relative to its cart card. */
+.cart-card {
+  position: relative;
+  width: 100%;
+
+  /* Reserve space above product details for the corner button. */
+  padding-top: 2.5rem;
+}
+
+/* Ovverriding genere button styles */
+.cart-card__remove {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  color: var(--dark-grey);
+  border: 1px solid var(--light-grey);
+  border-radius: 4px;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.cart-card__remove:hover {
+  background-color: var(--light-grey);
+}
+
+/* Make keyboard focus easy to see */
+.cart-card__remove:focus-visible {
+  outline: 2px solid var(--tertiary-color);
+  outline-offset: 2px;
 }
