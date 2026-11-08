@@ -83,8 +83,26 @@
     </main>
 
     <footer>
+      <section class="newsletter">
+        <h2>Join Our Newsletter</h2>
+        <p>Get sleep-outside tips and deals in your inbox.</p>
+        <form id="newsletter-form" novalidate>
+          <label for="newsletter-email" class="visually-hidden">Email address</label>
+          <input 
+            type="email" 
+            id="newsletter-email" 
+            name="email" 
+            placeholder="you@example.com" 
+            required 
+            aria-describedby="newsletter-msg" 
+          />
+          <button type="submit">Sign Up</button>
+        </form>
+        <p id="newsletter-msg" role="status" aria-live="polite"></p>
+      </section>
       &copy;2025 ⛺ SleepOutside ⛺ WDD 330 ⛺ BYU-Idaho for BYU-Pathway
       Worldwide Online
     </footer>
+    <script type="module" src="../js/main.js"></script>
   </body>
 </html>

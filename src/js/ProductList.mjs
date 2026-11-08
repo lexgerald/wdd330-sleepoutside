@@ -4,10 +4,10 @@ function productCardTemplate(product) {
     <a href="product_pages/index.html?product=${product.Id}">
       <img
         src="${product.Image}"
-        alt="Image of ${product.Name}"
+        alt="Image of ${product.NameWithoutBrand}"
       />
-      <h3 class="card__brand">${product.Brand}</h3>
-      <h2 class="card__name">${product.Name}</h2>
+      <h3 class="card__brand">${product.Brand.Name}</h3>
+      <h2 class="card__name">${product.NameWithoutBrand}</h2>
       <p class="product-card__price">$${product.FinalPrice}</p>
     </a>
   </li>`;
