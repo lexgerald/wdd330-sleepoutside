@@ -9,15 +9,9 @@ function convertToJson(res) {
 }
 
 export default class ProductData {
-<<<<<<< HEAD
-  constructor() {
-    // this.category = category;
-    // this.path = `../public/json/${this.category}.json`;
-=======
   constructor(category) {
     this.category = category;
     this.path = `/json/${this.category}.json`;
->>>>>>> 31e44f9ef7636c790b9e3ac9642520e02bd6e421
   }
   async getData(category) {
     const response = await fetch(`${baseURL}products/search/${category}`);

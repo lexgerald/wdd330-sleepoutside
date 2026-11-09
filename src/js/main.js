@@ -1,8 +1,4 @@
 import { loadHeaderFooter } from "./utils.mjs";
-<<<<<<< HEAD
-
-loadHeaderFooter();
-=======
 import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
 import Alert from './Alert.js';
@@ -53,4 +49,3 @@ function initNewsletter() {
 
 // Run after DOM is ready
 document.addEventListener("DOMContentLoaded", initNewsletter);
->>>>>>> 31e44f9ef7636c790b9e3ac9642520e02bd6e421
