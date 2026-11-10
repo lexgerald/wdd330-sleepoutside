@@ -21,20 +21,36 @@ export function setClick(selector, callback) {
   });
   qs(selector).addEventListener("click", callback);
 }
-
+// Get product via query string
 export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  return urlParams.get(param);
+  const product = urlParams.get(param);
+
+// This checks if product exists
+  if (product) return product;
+  return null
 }
 
-export function renderListWithTemplate(template, parentElement, list, position = "afterbegin", clear = false) {
-  const htmlStrings = list.map(template);
-  // if clear is true we need to clear out the contents of the parent.
+export function renderListWithTemplate(
+  templateFn,
+  parentElement,
+  list,
+  position = "afterbegin",
+  clear = false,
+) {
   if (clear) {
     parentElement.innerHTML = "";
   }
-  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
+
+  const htmlStrings = list.map(templateFn);
+  const combinedHtml = htmlStrings.join("");
+  parentElement.insertAdjacentHTML(position, combinedHtml);
+}
+
+export function calcDiscount(finalPrice, suggestedPrice) {
+  const discount = ((suggestedPrice - finalPrice) / suggestedPrice) * 100;
+  return discount.toFixed(0);
 }
 
 export function renderWithTemplate(template, parentElement, data, callback) {
@@ -44,7 +60,7 @@ export function renderWithTemplate(template, parentElement, data, callback) {
   }
 }
 
-async function loadTemplate(path) {
+export async function loadTemplate(path) {
   const res = await fetch(path);
   const template = await res.text();
   return template;
@@ -52,11 +68,48 @@ async function loadTemplate(path) {
 
 export async function loadHeaderFooter() {
   const headerTemplate = await loadTemplate("../partials/header.html");
-  const footerTemplate = await loadTemplate("../partials/footer.html");
-
   const headerElement = document.querySelector("#main-header");
+
+  const footerTemplate = await loadTemplate("../partials/footer.html");
   const footerElement = document.querySelector("#main-footer");
 
   renderWithTemplate(headerTemplate, headerElement);
   renderWithTemplate(footerTemplate, footerElement);
+
+  superscript();
+}
+
+export function alertMessage(message, scroll = true, duration = 3000) {
+  const alert = document.createElement("div");
+  alert.classList.add("alert");
+  alert.innerHTML = `<p>${message}</p><span>X</span>`;
+
+  alert.addEventListener("click", function (e) {
+    if (e.target.tagName == "SPAN") {
+      main.removeChild(this);
+    }
+  });
+  const main = document.querySelector("main");
+  main.prepend(alert);
+
+  if (scroll) window.scrollTo(0, 0);
+}
+
+export function removeAllAlerts() {
+  const alerts = document.querySelectorAll(".alert");
+  alerts.forEach((alert) => document.querySelector("main").removeChild(alert));
+}
+
+export function superscript() {
+  const cartNum = document.querySelector(".cart .superscript");
+  const cartItems = getLocalStorage("so-cart") || [];
+  const count = cartItems.length;
+
+  if (count === 0) {
+    cartNum.classList.add("hide");
+  }
+  else {
+    cartNum.classList.remove("hide");
+    cartNum.innerHTML = `${count}`;
+  }
 }
