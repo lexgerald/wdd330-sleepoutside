@@ -9,14 +9,12 @@ export default class ProductDetails {
     }
 
     async init() {
-        // use the datasource to get the details for the current product. findProductById will return a promise! use await or .then() to process it
-        // the product details are needed before rendering the HTML
-        // once the HTML is rendered, add a listener to the Add to Cart button
-        // Notice the .bind(this). This callback will not work if the bind(this) is missing. Review the readings from this week on 'this' to understand why.
-        
         this.product = await this.dataSource.findProductById(this.productId);
         this.renderProductDetails();
         document.getElementById("addToCart").addEventListener("click", this.addProductToCart.bind(this));
+
+        // ADDED: init comments once the product is on the page
+        this.initComments();
     }
 
     addProductToCart() {
@@ -28,9 +26,69 @@ export default class ProductDetails {
     }
 
     renderProductDetails() {
-         const element = document.querySelector(".product-detail");
+        const element = document.querySelector(".product-detail");
         element.innerHTML = productDetailsTemplate(this.product);
     }
+
+    // ===== ADDED: comments subsystem =====
+    initComments() {
+        const productId = this.product.Id;
+        const storageKey = `so-comments-${productId}`;
+
+        const listEl  = document.getElementById("comments-list");
+        const formEl  = document.getElementById("comment-form");
+        const inputEl = document.getElementById("comment-text");
+        const msgEl   = document.getElementById("comment-msg");
+
+        if (!listEl || !formEl) return; // safety: HTML not present
+
+        const render = () => {
+            const comments = getLocalStorage(storageKey) || [];
+            listEl.innerHTML = comments.length
+                ? comments
+                      .map((c) => {
+                          const date = new Date(c.timestamp).toLocaleString();
+                          return `<p class="comment-item">
+                              <span class="comment-date">${date}</span>
+                              <br />${escapeHtml(c.text)}
+                          </p>`;
+                      })
+                      .join("")
+                : `<p class="no-comments">No comments yet. Be the first!</p>`;
+        };
+
+        formEl.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const text = inputEl.value.trim();
+
+            if (!text) {
+                msgEl.textContent = "Please enter a comment.";
+                msgEl.className = "error";
+                return;
+            }
+
+            const comments = getLocalStorage(storageKey) || [];
+            comments.push({ text, timestamp: Date.now() });
+            setLocalStorage(storageKey, comments);
+
+            msgEl.textContent = "Comment added!";
+            msgEl.className = "success";
+            inputEl.value = "";
+            render();
+        });
+
+        render();
+    }
+}
+
+// ADDED: escape user input before inserting into HTML
+function escapeHtml(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 function productDetailsTemplate(product) {

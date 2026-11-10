@@ -80,6 +80,24 @@
           <button id="addToCart" data-id="344YJ">Add to Cart</button>
         </div> -->
       </section>
+
+      <!-- ADDED: comments section -->
+      <section class="comments-section">
+        <h3>Customer Comments</h3>
+        <div id="comments-list"></div>
+
+        <form id="comment-form">
+          <label for="comment-text">Add your comment:</label>
+          <textarea
+            id="comment-text"
+            rows="3"
+            required
+            placeholder="Share your thoughts about this product..."
+          ></textarea>
+          <button type="submit">Submit Comment</button>
+        </form>
+        <p id="comment-msg" aria-live="polite"></p>
+      </section>
     </main>
 
     <footer>&copy;NOT a real business</footer>
