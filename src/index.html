@@ -30,34 +30,33 @@
       </div>
 
       <section class="products">
-        <ul class="product-grid">
-          <li>
-            <a href="product_listing/index.html?category=tents">
-              <img src="images/category-tents.svg" alt="Tents" />
-              <h2>Tents</h2>
-            </a>
-          </li>
-          <li>
-            <a href="product_listing/index.html?category=backpacks">
-              <img src="images/category-backpacks.svg" alt="Backpacks" />
-              <h2>Backpacks</h2>
-            </a>
-          </li>
-          <li>
-            <a href="product_listing/index.html?category=sleeping-bags">
-              <img src="images/category-sleepingbags.svg" alt="Sleeping Bags" />
-              <h2>Sleeping Bags</h2>
-            </a>
-          </li>
-          <li>
-            <a href="product_listing/index.html?category=hammocks">
-              <img src="images/category-hammocks.svg" alt="Hammocks" />
-              <h2>Hammocks</h2>
-            </a>
-          </li>
-        </ul>
+        <h2>Top Products</h2>
+        <ul class="product-list"></ul>
       </section>
     </main>
-    <footer id="main-footer"></footer>
+    <!-- Newsletter Sign-Up -->
+    <section class="newsletter">
+      <h2>Join Our Newsletter</h2>
+      <p>Get sleep-outside tips and deals in your inbox.</p>
+      <form id="newsletter-form" novalidate>
+        <label for="newsletter-email" class="visually-hidden"
+          >Email address</label
+        >
+        <input
+          type="email"
+          id="newsletter-email"
+          name="email"
+          placeholder="you@example.com"
+          required
+          aria-describedby="newsletter-msg"
+        />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p id="newsletter-msg" role="status" aria-live="polite"></p>
+    </section>
+    <footer>
+      &copy;2025 ⛺ SleepOutside ⛺ WDD 330 ⛺ BYU-Idaho for BYU-Pathway
+      Worldwide Online
+    </footer>
   </body>
 </html>

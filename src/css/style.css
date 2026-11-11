@@ -304,62 +304,8 @@ footer {
   padding: 1em;
 }
 
-.checkout-form {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 300px 1fr;
-}
-.checkout-form .summary h3 {
-  padding: 0;
-  margin: 0;
-  margin-bottom: 16px;
-  color: #525b0f;
-}
-.checkout-form .summary table {
-  display: grid;
-  border: 1px solid #525b0f;
-}
-
-.checkout-form fieldset {
-  display: grid;
-  gap: 2px;
-
-  margin-bottom: 16px;
-}
-.checkout-form fieldset legend {
-  font-size: 14px;
-  color: #525b0f;
-  font-weight: 600;
-}
-
-.checkout-form fieldset label {
-  margin-top: 8px;
-}
-
-.checkout-form fieldset input {
-  height: 40px;
-}
-
-.checkout-form button {
-  margin-bottom: 40px;
-}
-.hide {
-  display: none;
-}
-.superscript {
-  position: absolute;
-  top: 10px;
-  right: 1px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: white;
-  background-color: goldenrod;
-  border-radius: 50%;
-  font-size: 15px;
-}
-
-.comments-section {
-  max-width: 640px;
+.newsletter {
+  max-width: 480px;
   margin: 2rem auto;
   padding: 1rem;
 }
@@ -380,7 +326,10 @@ footer {
   color: #666;
   font-style: italic;
 }
-#comment-form {
+.newsletter h2 {
+  margin-top: 0;
+}
+.newsletter form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -404,174 +353,63 @@ footer {
   cursor: pointer;
   font-size: 1rem;
 }
-#comment-form button:hover { background: #1f5673; }
-#comment-msg.success { color: #2e7d32; font-weight: 600; }
-#comment-msg.error   { color: #c62828; font-weight: 600; }
-
-/* ============================
-   Checkout page — vertical layout
-   ============================ */
-.checkout {
-  padding: 2rem 1rem 3rem;
+.newsletter button:hover {
+  background: #1f5673;
+}
+#newsletter-msg {
+  min-height: 1.2em;
+  font-weight: 600;
+}
+#newsletter-msg.success {
+  color: #2e7d32;
+}
+#newsletter-msg.error {
+  color: #c62828;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
-.checkout__title {
-  font-size: 2rem;
-  font-variant: small-caps;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: var(--secondary-color);
+/* Let the remove button possition itself relative to its cart card. */
+.cart-card {
+  position: relative;
+  width: 100%;
+
+  /* Reserve space above product details for the corner button. */
+  padding-top: 2.5rem;
 }
 
-/* Narrow column, centered — feels like a real checkout */
-.checkout-form {
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.checkout-form__form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-/* Card-style fieldsets, stacked vertically */
-.card {
-  border: 1px solid var(--light-grey);
-  border-radius: 10px;
-  background: #fff;
-  padding: 1.25rem 1.5rem 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+/* Ovverriding genere button styles */
+.cart-card__remove {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
   margin: 0;
-}
-
-.card legend {
-  font-family: var(--font-headline);
-  font-size: 1.1rem;
-  color: var(--tertiary-color);
-  padding: 0 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-/* Every field is a vertical stack: label above input */
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-top: 1rem;
-}
-
-.field:first-of-type {
-  margin-top: 0.5rem;
-}
-
-.field label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--dark-grey);
-  letter-spacing: 0.02em;
-}
-
-.field input {
-  width: 100%;
-  padding: 0.75rem 0.9rem;
-  font: inherit;
-  font-size: 1rem;
+  background-color: transparent;
   color: var(--dark-grey);
   border: 1px solid var(--light-grey);
-  border-radius: 6px;
-  background: #fafafa;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
-.field input::placeholder {
-  color: #9a9a9a;
+.cart-card__remove:hover {
+  background-color: var(--light-grey);
 }
 
-.field input:hover {
-  border-color: #b5b5b5;
-}
-
-.field input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(240, 168, 104, 0.25);
-}
-
-/* Live HTML5 validation feedback */
-.field input:required:invalid:not(:placeholder-shown) {
-  border-color: #d9534f;
-  background: #fff6f6;
-}
-
-.field input:required:valid {
-  border-color: #7bb87b;
-}
-
-/* Order summary — vertical label/value rows */
-.order_summary {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.65rem 1rem;
-  margin-top: 0.5rem;
-}
-
-.order_summary > div:nth-child(odd) {
-  color: #555;
-}
-
-.order_summary > div:nth-child(even) {
-  text-align: right;
-  font-weight: 600;
-}
-
-.order_summary__total {
-  border-top: 2px solid var(--primary-color);
-  padding-top: 0.75rem;
-  margin-top: 0.4rem;
-  font-size: 1.15rem;
-  color: var(--secondary-color);
-}
-
-/* Full-width primary button at the bottom */
-.btn-primary {
-  width: 100%;
-  padding: 1rem 1.5rem;
-  font-size: var(--large-font);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  background-color: var(--secondary-color);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.05s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--tertiary-color);
-}
-
-.btn-primary:active {
-  transform: translateY(1px);
-}
-
-.btn-primary:focus-visible {
-  outline: 3px solid var(--primary-color);
+/* Make keyboard focus easy to see */
+.cart-card__remove:focus-visible {
+  outline: 2px solid var(--tertiary-color);
   outline-offset: 2px;
-}
-
-/* Small screens */
-@media (max-width: 520px) {
-  .checkout-form {
-    max-width: 100%;
-  }
-  .card {
-    padding: 1rem;
-  }
-  .checkout__title {
-    font-size: 1.6rem;
-  }
 }
