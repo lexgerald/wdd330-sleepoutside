@@ -5,10 +5,7 @@ import Alert from "./Alert.js";
 
 loadHeaderFooter();
 
-const dataSource = new ProductData("tents");
-const element = document.querySelector(".product-list");
-const productList = new ProductList("Tents", dataSource, element);
-
+// Initialize and render the alert on the index page
 const alert = new Alert();
 
 productList.init();
