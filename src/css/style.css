@@ -131,6 +131,25 @@ button {
   fill: gray;
 }
 
+.superscript {
+  position: absolute;
+  top: 5px;
+  right: 0;
+
+  background-color: #efa868;
+  color: #571c8b;
+
+  border-radius: 45%;
+  min-width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.75rem;
+  font-weight: bold;
+}
 /* End cart icon styles */
 
 .mission {
