@@ -7,7 +7,7 @@ export default class ProductDetails {
         this.product = {};
         this.dataSource = dataSource;
     }
-
+    
     async init() {
         this.product = await this.dataSource.findProductById(this.productId);
         this.renderProductDetails();

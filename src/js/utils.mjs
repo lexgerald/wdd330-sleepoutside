@@ -48,6 +48,7 @@ export function renderListWithTemplate(
   parentElement.insertAdjacentHTML(position, combinedHtml);
 }
 
+// Calculates the discount percentage for a product listing.
 export function calcDiscount(finalPrice, suggestedPrice) {
   const discount = ((suggestedPrice - finalPrice) / suggestedPrice) * 100;
   return discount.toFixed(0);
