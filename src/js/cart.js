@@ -1,10 +1,4 @@
-import {
-  getLocalStorage,
-  setLocalStorage,
-  loadHeaderFooter,
-} from "./utils.mjs";
-
-loadHeaderFooter();
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 function renderCartContents() {
   // Read the saved cart. Empty array for a 1st time visitor
