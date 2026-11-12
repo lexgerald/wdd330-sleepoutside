@@ -1,5 +1,5 @@
 export default class Alert {
-    constructor(jsonPath = './json/alerts.json') {
+    constructor(jsonPath = "/json/alerts.json") {
         this.jsonPath = jsonPath;
     }
 
@@ -10,7 +10,7 @@ export default class Alert {
                 return await response.json();
             }
         } catch (error) {
-            console.error('Error fetching alerts:', error);
+            console.error("Error fetching alerts:", error);
         }
         return [];
     }
@@ -21,21 +21,21 @@ export default class Alert {
 
         // If alerts exist & array is not empty
         if (alerts && alerts.length > 0) {
-            const alertSection = document.createElement('section');
-            alertSection.classList.add('alert-list');
+            const alertSection = document.createElement("section");
+            alertSection.classList.add("alert-list");
 
             // Loop through each alert item in json
             alerts.forEach(alertData => {
-                const alertParagraph = document.createElement('p');
+                const alertParagraph = document.createElement("p");
                 alertParagraph.textContent = alertData.message;
                 alertParagraph.style.backgroundColor = alertData.background;
                 alertParagraph.style.color = alertData.color;
-                alertParagraph.style.padding = '10px';
-                alertParagraph.style.textAlign = 'center';
+                alertParagraph.style.padding = "10px";
+                alertParagraph.style.textAlign = "center";
                 alertSection.appendChild(alertParagraph);
             });
 
-            const mainElement = document.querySelector('main');
+            const mainElement = document.querySelector("main");
             if (mainElement) {
                 mainElement.prepend(alertSection);
             }
