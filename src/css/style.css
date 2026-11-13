@@ -150,6 +150,7 @@ button {
   font-size: 0.75rem;
   font-weight: bold;
 }
+
 /* End cart icon styles */
 
 .mission {
@@ -337,15 +338,16 @@ button {
   color: #666;
 }
 
-.category-icons{
-    display:block;
-    margin:0 auto;
-  }
-  .category-icons img {
-    padding: 10px;
-    margin:  20px;
-    width: 50px;
-  }
+.category-icons {
+  display: block;
+  margin: 0 auto;
+}
+
+.category-icons img {
+  padding: 10px;
+  margin: 20px;
+  width: 50px;
+}
 
 @media screen and (min-width: 500px) {
   body {
@@ -361,14 +363,16 @@ button {
     font-size: inherit;
     grid-template-columns: 150px 1fr auto;
   }
-  .category-icons{
-    display:flex;
+
+  .category-icons {
+    display: flex;
     justify-content: center;
-    gap:20px;
+    gap: 20px;
   }
+
   .category-icons img {
     padding: 5px;
-    margin:  50px 20px 10px 20px;
+    margin: 50px 20px 10px 20px;
     width: 60px;
   }
 }
@@ -422,32 +426,39 @@ footer {
   margin: 2rem auto;
   padding: 1rem;
 }
+
 .comments-section h3 {
   border-bottom: 1px solid #ddd;
   padding-bottom: 0.5rem;
 }
+
 .comment-item {
   padding: 0.6rem 0;
   border-bottom: 1px solid #eee;
   line-height: 1.4;
 }
+
 .comment-date {
   font-size: 0.8rem;
   color: #777;
 }
+
 .no-comments {
   color: #666;
   font-style: italic;
 }
+
 .newsletter h2 {
   margin-top: 0;
 }
+
 .newsletter form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-top: 1rem;
 }
+
 #comment-text {
   padding: 0.6rem;
   font-family: inherit;
@@ -456,6 +467,7 @@ footer {
   border-radius: 4px;
   resize: vertical;
 }
+
 #comment-form button {
   align-self: flex-start;
   padding: 0.6rem 1.2rem;
@@ -466,19 +478,24 @@ footer {
   cursor: pointer;
   font-size: 1rem;
 }
+
 .newsletter button:hover {
   background: #1f5673;
 }
+
 #newsletter-msg {
   min-height: 1.2em;
   font-weight: 600;
 }
+
 #newsletter-msg.success {
   color: #2e7d32;
 }
+
 #newsletter-msg.error {
   color: #c62828;
 }
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -552,4 +569,56 @@ main.divider a[href*="checkout"] {
 
 main.divider a[href*="checkout"]:hover {
   background-color: var(--primary-color);
+}
+
+/* Registration modal */
+.registration-modal {
+  width: min(90%, 450px);
+  margin: auto;
+  padding: 2rem;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.registration-modal::backdrop {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.registration-modal h2 {
+  margin-bottom: 1rem;
+  color: var(--secondary-color);
+}
+
+.registration-modal p {
+  padding: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.registration-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.registration-modal input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 4px;
+}
+
+.registration-modal__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  background: transparent;
+  color: var(--dark-grey);
+  font-size: 1.5rem;
+}
+
+.registration-modal__close:hover {
+  background: var(--light-grey);
 }
