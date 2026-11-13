@@ -7,6 +7,7 @@
   <title>Sleep Outside | Home</title>
   <link rel="stylesheet" href="/css/style.css" />
   <script type="module" src="./js/main.js"></script>
+  <script type="module" src="./js/registration.js"></script>
 </head>
 
 <body>
@@ -32,18 +33,43 @@
       <ul class="product-list"></ul>
     </section>
   </main>
+
+  <!-- First-visit registration modal -->
+  <dialog id="registration-modal" class="registration-modal">
+    <button type="button" class="registration-modal__close" id="close-registration" aria-label="Close registration">
+      &times;
+    </button>
+
+    <h2>Welcome to Sleep Outside!</h2>
+    <p>
+      Join our community and register for a chance to win our outdoor
+      adventure giveaway!
+    </p>
+
+    <form id="registration-form">
+      <label for="registration-email">Email address</label>
+      <input type="email" id="registration-email" name="email" placeholder="you@example.com" required />
+      <button type="submit">Register Now</button>
+    </form>
+
+    <p id="registration-message" role="status" aria-live="polite"></p>
+  </dialog>
+
   <!-- Newsletter Sign-Up -->
   <section class="newsletter">
     <h2>Join Our Newsletter</h2>
     <p>Get sleep-outside tips and deals in your inbox.</p>
     <form id="newsletter-form" novalidate>
-      <label for="newsletter-email" class="visually-hidden">Email address</label>
+      <label for="newsletter-email" class="visually-hidden">
+        Email address
+      </label>
       <input type="email" id="newsletter-email" name="email" placeholder="you@example.com" required
         aria-describedby="newsletter-msg" />
       <button type="submit">Sign Up</button>
     </form>
     <p id="newsletter-msg" role="status" aria-live="polite"></p>
   </section>
+
   <footer id="main-footer"></footer>
 </body>
 
