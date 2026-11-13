@@ -9,4 +9,11 @@ const dataSource = new ProductData(category);
 const listElement = document.querySelector(".product-list");
 
 const productList = new ProductList(category, dataSource, listElement);
+
+const title = document.querySelector(".products h2");
+title.textContent = `Top Products: ${category
+    .split("-")
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ")}`;
+
 productList.init();

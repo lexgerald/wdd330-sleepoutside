@@ -3,7 +3,7 @@ import { renderListWithTemplate } from "./utils.mjs";
 
 function productCardTemplate(product) {
   return `<li class="product-card">
-    <a href="/product_pages/?product=${product.Id}">
+    <a href="../product_pages/index.html?product=${product.Id}">
       <img src="${product.Images.PrimaryMedium}" alt="Image of ${product.Brand.Name}">
       <h2 class="card__brand">${product.Brand.Name}</h2>
       <h3 class="card__name">${product.Name}</h3>
@@ -23,13 +23,6 @@ export default class ProductList {
     const list = await this.dataSource.getData(this.productCategory);
     this.renderList(list);
     this.renderBreadcrumb(list);
-
-    const titleElement = document.querySelector(".title");
-    if (titleElement && this.productCategory) {
-      const title = this.productCategory.charAt(0).toUpperCase() +
-        this.productCategory.slice(1);
-      titleElement.textContent = title.replace("-", " ");
-    }
   }
 
   renderList(productList) {

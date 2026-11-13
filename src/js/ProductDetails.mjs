@@ -16,8 +16,10 @@ export default class ProductDetails {
             const rawCategory = this.product?.Category || this.dataSource?.category || "tents";
             const categoryName = rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
             const categorySlug = rawCategory.toLowerCase();
-            const linkTarget = categorySlug === "tents" ? "../tents/index.html" : `../product_listing/index.html?category=${categorySlug}`;
-            breadcrumb.innerHTML = `<a href="${linkTarget}">${categoryName}</a>`;
+            const linkTarget = `../product_listing/index.html?category=${categorySlug}`;
+
+            breadcrumb.innerHTML =
+                `<a href="${linkTarget}">${categoryName}</a>`;
         }
 
         this.renderProductDetails();
