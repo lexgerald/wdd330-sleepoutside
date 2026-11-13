@@ -22,14 +22,29 @@ export default class ProductList {
   async init() {
     const list = await this.dataSource.getData(this.productCategory);
     this.renderList(list);
+    this.renderBreadcrumb(list);
 
-    const title = this.productCategory.charAt(0).toUpperCase() +
-      this.productCategory.slice(1);
-
-    document.querySelector(".title").textContent = title.replace("-", " ");
+    const titleElement = document.querySelector(".title");
+    if (titleElement && this.productCategory) {
+      const title = this.productCategory.charAt(0).toUpperCase() +
+        this.productCategory.slice(1);
+      titleElement.textContent = title.replace("-", " ");
+    }
   }
 
   renderList(productList) {
     renderListWithTemplate(productCardTemplate, this.listElement, productList);
+  }
+
+  renderBreadcrumb(list) {
+    const breadcrumb = document.querySelector(".breadcrumb");
+    if (breadcrumb) {
+      const category = this.productCategory || "Tents";
+      const categoryName =
+        category.charAt(0).toUpperCase() + category.slice(1);
+      const count = Array.isArray(list) ? list.length : 0;
+      const countLabel = count === 1 ? "item" : "items";
+      breadcrumb.innerHTML = `<span class="breadcrumb-category">${categoryName}</span> &rarr; (${count} ${countLabel})`;
+    }
   }
 }

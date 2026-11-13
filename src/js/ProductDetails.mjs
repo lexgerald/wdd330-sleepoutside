@@ -10,6 +10,16 @@ export default class ProductDetails {
     
     async init() {
         this.product = await this.dataSource.findProductById(this.productId);
+
+        const breadcrumb = document.querySelector(".breadcrumb");
+        if (breadcrumb) {
+            const rawCategory = this.product?.Category || this.dataSource?.category || "tents";
+            const categoryName = rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
+            const categorySlug = rawCategory.toLowerCase();
+            const linkTarget = categorySlug === "tents" ? "../tents/index.html" : `../product_listing/index.html?category=${categorySlug}`;
+            breadcrumb.innerHTML = `<a href="${linkTarget}">${categoryName}</a>`;
+        }
+
         this.renderProductDetails();
         document.getElementById("addToCart").addEventListener("click", this.addProductToCart.bind(this));
 
