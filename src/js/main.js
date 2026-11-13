@@ -6,12 +6,15 @@ import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
+// Initialize and render the product list
+const dataSource = new ProductData("tents");
+const listElement = document.querySelector(".product-list");
+const productList = new ProductList("tents", dataSource, listElement);
+productList.init();
+
 // Initialize and render the alert on the index page
 const alert = new Alert();
 alert.render();
-
-productList.init();
-
 
 // Newsletter sign-up
 function initNewsletter() {
@@ -48,3 +51,6 @@ function initNewsletter() {
 
 // Run after DOM is ready
 document.addEventListener("DOMContentLoaded", initNewsletter);
+
+
+
