@@ -1,49 +1,35 @@
+
 import { renderListWithTemplate } from "./utils.mjs";
 
 function productCardTemplate(product) {
-  return `
-    <li class="product-card">
-      <a href="../product_pages/?product=${product.Id}">
-        <img src="${product.Image}" alt="${product.Name}">
-        <h2>${product.Brand.Name}</h2>
-        <h3>${product.Name}</h3>
-        <p class="product-card__price">$${product.FinalPrice}</p>
-      </a>
-    </li>
-    `;
+  return `<li class="product-card">
+    <a href="/product_pages/?product=${product.Id}">
+      <img src="${product.Images.PrimaryMedium}" alt="Image of ${product.Brand.Name}">
+      <h2 class="card__brand">${product.Brand.Name}</h2>
+      <h3 class="card__name">${product.Name}</h3>
+      <p class="product-card__price">$${product.FinalPrice}</p>
+    </a>
+  </li>`;
 }
 
 export default class ProductList {
-  constructor(category, dataSource, listElement) {
-    this.category = category;
+  constructor(productCategory, dataSource, listElement) {
+    this.productCategory = productCategory;
     this.dataSource = dataSource;
     this.listElement = listElement;
   }
 
   async init() {
-    const list = await this.dataSource.getData();
+    const list = await this.dataSource.getData(this.productCategory);
     this.renderList(list);
-    this.renderBreadcrumb(list);
+
+    const title = this.productCategory.charAt(0).toUpperCase() +
+      this.productCategory.slice(1);
+
+    document.querySelector(".title").textContent = title.replace("-", " ");
   }
 
-  renderList(list) {
-    // const htmlStrings = list.map(productCardTemplate);
-    // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
-
-    // apply use new utility function instead of the commented code above
-    renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
-
+  renderList(productList) {
+    renderListWithTemplate(productCardTemplate, this.listElement, productList);
   }
-
-  renderBreadcrumb(list) {
-    const breadcrumb = document.querySelector(".breadcrumb");
-    if (breadcrumb) {
-      const categoryName =
-        this.category.charAt(0).toUpperCase() + this.category.slice(1);
-      const count = list.length;
-      const countLabel = count === 1 ? "item" : "items";
-      breadcrumb.innerHTML = `<span class="breadcrumb-category">${categoryName}</span> &rarr; (${count} ${countLabel})`;
-    }
-  }
-
 }
