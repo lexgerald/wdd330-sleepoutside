@@ -20,7 +20,7 @@ function packageItems(items) {
       id: item.Id,
       price: item.FinalPrice,
       name: item.Name,
-      quantity: 1,
+      quantity: Number(item.quantity) || 1,
     };
   });
   return simplifiedItems;
@@ -38,7 +38,7 @@ export default class CheckoutProcess {
   }
 
   init() {
-    this.list = getLocalStorage(this.key);
+    this.list = getLocalStorage(this.key) || [];
     this.calculateItemSummary();
   }
 
@@ -50,17 +50,27 @@ export default class CheckoutProcess {
     const itemNumElement = document.querySelector(
       this.outputSelector + " #num-items"
     );
-    itemNumElement.innerText = this.list.length;
+    const totalCount = this.list.reduce(
+      (sum, item) => sum + (Number(item.quantity) || 1),
+      0,
+    );
+    if (itemNumElement) itemNumElement.innerText = totalCount;
     // calculate the total of all the items in the cart
-    const amounts = this.list.map((item) => item.FinalPrice);
-    this.itemTotal = amounts.reduce((sum, item) => sum + item);
-    summaryElement.innerText = `$${this.itemTotal}`;;
+    this.itemTotal = this.list.reduce(
+      (sum, item) => sum + (Number(item.FinalPrice) || 0) * (Number(item.quantity) || 1),
+      0,
+    );
+    if (summaryElement) summaryElement.innerText = `$${this.itemTotal.toFixed(2)}`;
   }
 
   calculateOrderTotal() {
     // calculate the shipping and tax amounts. Then use them to along with the cart total to figure out the order total
+    const totalCount = this.list.reduce(
+      (sum, item) => sum + (Number(item.quantity) || 1),
+      0,
+    );
     this.tax = (this.itemTotal * .06);
-    this.shipping = 10 + (this.list.length - 1) * 2;
+    this.shipping = totalCount > 0 ? 10 + (totalCount - 1) * 2 : 0;
     this.orderTotal = (
       parseFloat(this.itemTotal) +
       parseFloat(this.tax) +

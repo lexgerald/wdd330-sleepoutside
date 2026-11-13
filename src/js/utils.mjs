@@ -103,8 +103,12 @@ export function removeAllAlerts() {
 
 export function superscript() {
   const cartNum = document.querySelector(".cart .superscript");
+  if (!cartNum) return;
   const cartItems = getLocalStorage("so-cart") || [];
-  const count = cartItems.length;
+  const count = cartItems.reduce(
+    (total, item) => total + (Number(item.quantity) || 1),
+    0,
+  );
 
   if (count === 0) {
     cartNum.classList.add("hide");

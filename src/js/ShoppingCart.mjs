@@ -17,35 +17,45 @@ export default class ShoppingCart {
 
     getCartTotal(array) {
         const total = document.querySelector(".sum-cost");
-        let i = 0;
         let cartTotal = 0;
-        if (array.length == 0) {
-          cartTotal = 0;
+        if (array && array.length > 0) {
+          cartTotal = array.reduce(
+            (sum, item) => sum + (Number(item.FinalPrice) || 0) * (Number(item.quantity) || 1),
+            0,
+          );
         }
-        else {
-            while (i < array.length) {
-              cartTotal += array[i].FinalPrice;
-              i++;
-          }
+        if (total) {
+          total.innerHTML = `Total: $${cartTotal.toFixed(2)}`;
         }
-        total.innerHTML = `Total: $${cartTotal.toFixed(2)}`;
+        return cartTotal;
     }
 }
 
 function cartItemTemplate(item) {
+  const quantity = Number(item.quantity) || 1;
+  const price = Number(item.FinalPrice) || 0;
+  const subtotal = price * quantity;
+  const imageSrc =
+    item.Image ||
+    item.Images?.PrimarySmall ||
+    item.Images?.PrimaryMedium ||
+    "";
+  const colorName =
+    item.Colors && item.Colors[0] ? item.Colors[0].ColorName : "";
+
   const newItem = `<li class="cart-card divider">
-  <a href="#" class="cart-card__image">
+  <a href="/product_pages/index.html?product=${item.Id}" class="cart-card__image">
     <img
-      src="${item.Images.PrimarySmall}"
+      src="${imageSrc}"
       alt="${item.Name}"
     />
   </a>
-  <a href="#">
+  <a href="/product_pages/index.html?product=${item.Id}">
     <h2 class="card__name">${item.Name}</h2>
   </a>
-  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-  <p class="cart-card__quantity">qty: 1</p>
-  <p class="cart-card__price">$${item.FinalPrice}</p>
+  ${colorName ? `<p class="cart-card__color">${colorName}</p>` : ""}
+  <p class="cart-card__quantity">qty: ${quantity}</p>
+  <p class="cart-card__price">$${subtotal.toFixed(2)}</p>
 </li>`;
 
   return newItem;
