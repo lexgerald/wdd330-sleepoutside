@@ -2,9 +2,11 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
 function productCardTemplate(product) {
-  const finalPrice = Number(product.FinalPrice);
-  const retailPrice = Number(product.SuggestedRetailPrice);
+  const finalPrice = Number(
+    product.FinalPrice ?? product.ListPrice ?? product.SuggestedRetailPrice
+  );
 
+  const retailPrice = Number(product.SuggestedRetailPrice);
   let discountHTML = "";
 
   // Check whether the product is discounted
@@ -39,7 +41,7 @@ function productCardTemplate(product) {
 
   return `<li class="product-card">
     <a href="/product_pages/?product=${product.Id}">
-      <img src="${product.Images.PrimaryMedium}" alt="Image of ${product.Brand.Name}">
+      <img src="${product.Image.replace("../images/", "/images/")}" alt="Image of ${product.Name}">
       <h2 class="card__brand">${product.Brand.Name}</h2>
       <h3 class="card__name">${product.Name}</h3>
 
@@ -67,7 +69,11 @@ export default class ProductList {
     const title = this.productCategory.charAt(0).toUpperCase() +
       this.productCategory.slice(1);
 
-    document.querySelector(".title").textContent = title.replace("-", " ");
+    const titleElement = document.querySelector(".title");
+
+    if (titleElement) {
+      titleElement.textContent = title.replace("-", " ");
+    }
   }
 
   renderList(productList) {
