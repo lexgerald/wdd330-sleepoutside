@@ -27,7 +27,10 @@ export default class ProductDetails {
     // Dynamically inject product data into the HTML template
     document.querySelector('#productName').innerText = this.product.Brand.Name;
     document.querySelector('#productNameWithoutBrand').innerText = this.product.NameWithoutBrand;
-    document.querySelector('#product-image').src = this.product.Image;
+    
+    // FIXED IMAGE LINE HERE: Changed to PrimaryLarge
+    document.querySelector('#product-image').src = this.product.Images.PrimaryLarge;
+    
     document.querySelector('#product-image').alt = this.product.Name;
     document.querySelector('.product-card__price').innerText = `$${this.product.FinalPrice}`;
     document.querySelector('.product__color').innerText = this.product.Colors[0].ColorName;

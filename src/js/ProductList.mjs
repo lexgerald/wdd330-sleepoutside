@@ -1,9 +1,8 @@
-// A template function to generate the HTML markup for each product card
 function productCardTemplate(product) {
   return `<li class="product-card">
-    <a href="product_pages/index.html?product=${product.Id}">
+    <a href="/product_pages/index.html?product=${product.Id}">
       <img
-        src="${product.Image}"
+        src="${product.Images.PrimaryMedium}"
         alt="Image of ${product.NameWithoutBrand}"
       />
       <h3 class="card__brand">${product.Brand.Name}</h3>
@@ -21,13 +20,19 @@ export default class ProductList {
   }
 
   async init() {
-    // The dataSource will return a Promise, so we use await to resolve it
-    const list = await this.dataSource.getData();
-    // Render the list
+    const list = await this.dataSource.getData(this.category);
+    
+    const capitalizedCategory = this.category.charAt(0).toUpperCase() + this.category.slice(1);
+    const titleElement = document.querySelector(".title");
+    if (titleElement) {
+      titleElement.innerHTML = `Top Products: ${capitalizedCategory}`;
+    }
+
     this.renderList(list);
   }
 
   renderList(list) {
+    this.listElement.innerHTML = ""; 
     const htmlStrings = list.map(productCardTemplate);
     this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
   }
