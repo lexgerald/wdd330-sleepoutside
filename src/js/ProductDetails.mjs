@@ -1,5 +1,11 @@
-import { getLocalStorage, setLocalStorage, calcDiscount, superscript, animateCartIcon } from "./utils.mjs";
-
+import {
+    getLocalStorage,
+    setLocalStorage,
+    calcDiscount,
+    superscript,
+    animateCartIcon,
+    alertMessage,
+} from "./utils.mjs";
 export default class ProductDetails {
 
     constructor(productId, dataSource) {
@@ -44,6 +50,8 @@ export default class ProductDetails {
         setLocalStorage("so-cart", cartItems);
         superscript();
         animateCartIcon();
+
+        alertMessage(`${this.product.Name} added to your cart!`, false);
     }
 
     renderProductDetails() {

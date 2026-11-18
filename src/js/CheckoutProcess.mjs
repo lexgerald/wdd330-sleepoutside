@@ -1,4 +1,9 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  alertMessage,
+  removeAllAlerts,
+} from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 const services = new ExternalServices();
@@ -110,8 +115,17 @@ export default class CheckoutProcess {
     } catch (err) {
       console.log(err);
       removeAllAlerts();
-      for (let message in err.message) {
-        alertMessage(err.message(message));
+
+      const errorMessage = err.message;
+
+      if (typeof errorMessage === "string") {
+        alertMessage(errorMessage, false);
+      } else if (errorMessage && typeof errorMessage === "object") {
+        Object.values(errorMessage).forEach((message) => {
+          alertMessage(message, false);
+        });
+      } else {
+        alertMessage("Something went wrong while processing your order. Please try again.", false);
       }
     }
   }

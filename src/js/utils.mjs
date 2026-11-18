@@ -1,18 +1,19 @@
+
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
 }
-// or a more concise version if you are into that sort of thing:
-// export const qs = (selector, parent = document) => parent.querySelector(selector);
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
+
 // save data to local storage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
+
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
@@ -21,15 +22,15 @@ export function setClick(selector, callback) {
   });
   qs(selector).addEventListener("click", callback);
 }
+
 // Get product via query string
 export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const product = urlParams.get(param);
 
-  // This checks if product exists
   if (product) return product;
-  return null
+  return null;
 }
 
 export function renderListWithTemplate(
@@ -80,22 +81,32 @@ export async function loadHeaderFooter() {
   superscript();
 }
 
+// Display an alert message at the top of the page
 export function alertMessage(message, scroll = true, duration = 3000) {
   const alert = document.createElement("div");
   alert.classList.add("alert");
-  alert.innerHTML = `<p>${message}</p><span>X</span>`;
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = message;
+
+  const closeButton = document.createElement("span");
+  closeButton.textContent = "X";
+
+  alert.append(paragraph, closeButton);
 
   alert.addEventListener("click", function (e) {
-    if (e.target.tagName == "SPAN") {
-      main.removeChild(this);
+    if (e.target.tagName === "SPAN") {
+      this.remove();
     }
   });
+
   const main = document.querySelector("main");
   main.prepend(alert);
 
   if (scroll) window.scrollTo(0, 0);
 }
 
+// Remove all existing alert messages
 export function removeAllAlerts() {
   const alerts = document.querySelectorAll(".alert");
   alerts.forEach((alert) => document.querySelector("main").removeChild(alert));
@@ -104,6 +115,7 @@ export function removeAllAlerts() {
 export function superscript() {
   const cartNum = document.querySelector(".cart .superscript");
   if (!cartNum) return;
+
   const cartItems = getLocalStorage("so-cart") || [];
   const count = cartItems.reduce(
     (total, item) => total + (Number(item.quantity) || 1),
@@ -112,8 +124,7 @@ export function superscript() {
 
   if (count === 0) {
     cartNum.classList.add("hide");
-  }
-  else {
+  } else {
     cartNum.classList.remove("hide");
     cartNum.innerHTML = `${count}`;
   }
@@ -126,7 +137,7 @@ export function animateCartIcon() {
 
   // Remove the class first so the animation can play again on every click
   cartIcon.classList.remove("cart-animate");
-  void cartIcon.offsetWidth; // forces the browser to restart the animation
+  void cartIcon.offsetWidth;
   cartIcon.classList.add("cart-animate");
 
   // Clean up when the animation finishes

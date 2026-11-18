@@ -1,105 +1,113 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sleep Outside | Checkout</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <script src="../js/checkout.js" type="module"></script>
-  </head>
 
-  <body>
-    <header class="divider" id="main-header"></header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep Outside | Checkout</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/checkout.js" type="module"></script>
+</head>
 
-    <main class="divider checkout">
-      <h2 class="checkout__title">Review &amp; Place Your Order</h2>
+<body>
+  <header class="divider" id="main-header"></header>
 
-      <section class="checkout-form">
-        <form name="checkout" class="checkout-form__form">
-          <input type="hidden" name="orderDate" id="orderDate" />
+  <main class="divider checkout">
+    <h2 class="checkout__title">Review &amp; Place Your Order</h2>
 
-          <!-- Two cards side by side -->
-          <div class="checkout-form__row">
-            <fieldset class="card">
-              <legend>Shipping Information</legend>
+    <section class="checkout-form">
+      <form name="checkout" class="checkout-form__form">
+        <input type="hidden" name="orderDate" id="orderDate" />
 
-              <div class="field">
-                <label for="fname">First Name</label>
-                <input type="text" name="fname" id="fname" autocomplete="given-name" required />
-              </div>
+        <!-- Shipping and Payment Information -->
+        <div class="checkout-form__row">
+          <fieldset class="card">
+            <legend>Shipping Information</legend>
 
-              <div class="field">
-                <label for="lname">Last Name</label>
-                <input type="text" name="lname" id="lname" autocomplete="family-name" required />
-              </div>
+            <div class="field">
+              <label for="fname">First Name</label>
+              <input type="text" name="fname" id="fname" autocomplete="given-name" required />
+            </div>
 
-              <div class="field">
-                <label for="street">Address</label>
-                <input type="text" name="street" id="street" autocomplete="street-address" required />
-              </div>
+            <div class="field">
+              <label for="lname">Last Name</label>
+              <input type="text" name="lname" id="lname" autocomplete="family-name" required />
+            </div>
 
-              <div class="field">
-                <label for="city">City</label>
-                <input type="text" name="city" id="city" autocomplete="address-level2" required />
-              </div>
+            <div class="field">
+              <label for="street">Address</label>
+              <input type="text" name="street" id="street" autocomplete="street-address" required />
+            </div>
 
-              <div class="field">
-                <label for="state">State</label>
-                <input type="text" name="state" id="state" autocomplete="address-level1" required />
-              </div>
+            <div class="field">
+              <label for="city">City</label>
+              <input type="text" name="city" id="city" autocomplete="address-level2" required />
+            </div>
 
-              <div class="field">
-                <label for="zip">Zip</label>
-                <input type="text" name="zip" id="zip" inputmode="numeric" autocomplete="postal-code" required />
-              </div>
-            </fieldset>
+            <div class="field">
+              <label for="state">State</label>
+              <input type="text" name="state" id="state" autocomplete="address-level1" required />
+            </div>
 
-            <fieldset class="card">
-              <legend>Payment</legend>
-
-              <div class="field">
-                <label for="cardNumber">Card Number</label>
-                <input type="text" name="cardNumber" id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
-              </div>
-
-              <div class="field">
-                <label for="expiration">Expiration</label>
-                <input type="text" name="expiration" id="expiration" autocomplete="cc-exp" placeholder="MM/YY" required />
-              </div>
-
-              <div class="field">
-                <label for="code">CVV</label>
-                <input type="text" name="code" id="code" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required />
-              </div>
-            </fieldset>
-          </div>
-
-          <!-- Summary + button -->
-          <fieldset class="card checkout-summary">
-            <legend>Order Summary</legend>
-            <div class="order_summary">
-              <div>Items</div>
-              <div id="num-items"></div>
-
-              <div>Subtotal</div>
-              <div id="cartTotal"></div>
-
-              <div>Tax</div>
-              <div id="tax"></div>
-
-              <div>Shipping</div>
-              <div id="shipping"></div>
-
-              <div class="order_summary__total">Total</div>
-              <div id="orderTotal" class="order_summary__total"></div>
+            <div class="field">
+              <label for="zip">Zip</label>
+              <input type="text" name="zip" id="zip" inputmode="numeric" autocomplete="postal-code" required />
             </div>
           </fieldset>
 
-          <button type="submit" id="checkoutSubmit" class="btn-primary">Place Order</button>
-        </form>
-      </section>
-    </main>
+          <fieldset class="card">
+            <legend>Payment</legend>
 
-    <footer id="main-footer"></footer>
-  </body>
+            <div class="field">
+              <label for="cardNumber">Card Number</label>
+              <input type="text" name="cardNumber" id="cardNumber" inputmode="numeric" autocomplete="cc-number"
+                placeholder="1234 5678 9012 3456" pattern="[0-9 ]{13,19}" title="Enter a valid card number." required />
+            </div>
+
+            <div class="field">
+              <label for="expiration">Expiration</label>
+              <input type="text" name="expiration" id="expiration" autocomplete="cc-exp" placeholder="MM/YY"
+                pattern="(0[1-9]|1[0-2])/[0-9]{2}" title="Enter the expiration date in MM/YY format." required />
+            </div>
+
+            <div class="field">
+              <label for="code">CVV</label>
+              <input type="text" name="code" id="code" inputmode="numeric" autocomplete="cc-csc" placeholder="123"
+                pattern="[0-9]{3,4}" title="Enter a 3 or 4 digit CVV." required />
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Order Summary -->
+        <fieldset class="card checkout-summary">
+          <legend>Order Summary</legend>
+
+          <div class="order_summary">
+            <div>Items</div>
+            <div id="num-items"></div>
+
+            <div>Subtotal</div>
+            <div id="cartTotal"></div>
+
+            <div>Tax</div>
+            <div id="tax"></div>
+
+            <div>Shipping</div>
+            <div id="shipping"></div>
+
+            <div class="order_summary__total">Total</div>
+            <div id="orderTotal" class="order_summary__total"></div>
+          </div>
+        </fieldset>
+
+        <button type="submit" id="checkoutSubmit" class="btn-primary">
+          Place Order
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <footer id="main-footer"></footer>
+</body>
+
 </html>
