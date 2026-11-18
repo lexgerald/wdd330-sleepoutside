@@ -622,3 +622,51 @@ main.divider a[href*="checkout"]:hover {
 .registration-modal__close:hover {
   background: var(--light-grey);
 }
+/* Shop by Category - fix for product-categories */
+.product-categories {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.product-categories li a {
+  text-decoration: none;
+  color: var(--dark-grey);
+  display: block;
+}
+
+.product-categories img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 0.5rem;
+}
+
+.product-categories h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin: 0.5rem 0 1rem;
+}
+
+.sort-controls label {
+  font-weight: 600;
+}
+
+.sort-controls select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 4px;
+}
