@@ -652,3 +652,21 @@ main.divider a[href*="checkout"]:hover {
   font-size: 1rem;
   margin: 0;
 }
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin: 0.5rem 0 1rem;
+}
+
+.sort-controls label {
+  font-weight: 600;
+}
+
+.sort-controls select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 4px;
+}
