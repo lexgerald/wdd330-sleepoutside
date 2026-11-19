@@ -1,4 +1,11 @@
-import { setLocalStorage } from './utils.mjs';
+import {
+  getLocalStorage,
+  setLocalStorage,
+  calcDiscount,
+  superscript,
+  animateCartIcon,
+  alertMessage,
+} from "./utils.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -8,30 +15,130 @@ export default class ProductDetails {
   }
 
   async init() {
-    // 1. Fetch the product details using the data source
     this.product = await this.dataSource.findProductById(this.productId);
-    
-    // 2. Render the product details to the HTML page
+
+    const breadcrumb = document.querySelector(".breadcrumb");
+    if (breadcrumb) {
+      const rawCategory =
+        this.product?.Category || this.dataSource?.category || "tents";
+      const categoryName =
+        rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
+      const categorySlug = rawCategory.toLowerCase();
+      const linkTarget =
+        categorySlug === "tents"
+          ? "../tents/index.html"
+          : `../product_listing/index.html?category=${categorySlug}`;
+      breadcrumb.innerHTML = `<a href="${linkTarget}">${categoryName}</a>`;
+    }
+
     this.renderProductDetails();
-    
-    // 3. Add listener to the Add to Cart button
-    document.getElementById('addToCart')
-      .addEventListener('click', this.addProductToCart.bind(this));
+    document
+      .getElementById("addToCart")
+      .addEventListener("click", this.addProductToCart.bind(this));
+
+    this.initComments();
   }
 
   addProductToCart() {
-    setLocalStorage('so-cart', this.product);
+    const cartItems = getLocalStorage("so-cart") || [];
+    const existingItemIndex = cartItems.findIndex(
+      (item) => item.Id === this.product.Id
+    );
+
+    if (existingItemIndex > -1) {
+      cartItems[existingItemIndex].quantity =
+        (Number(cartItems[existingItemIndex].quantity) || 1) + 1;
+    } else {
+      const productToAdd = { ...this.product, quantity: 1 };
+      cartItems.push(productToAdd);
+    }
+
+    setLocalStorage("so-cart", cartItems);
+    superscript();
+    animateCartIcon();
+    // W04 Individual Stretch: give feedback
+    alertMessage("Item added to cart!");
   }
 
   renderProductDetails() {
-    // Dynamically inject product data into the HTML template
-    document.querySelector('#productName').innerText = this.product.Brand.Name;
-    document.querySelector('#productNameWithoutBrand').innerText = this.product.NameWithoutBrand;
-    document.querySelector('#product-image').src = this.product.Image;
-    document.querySelector('#product-image').alt = this.product.Name;
-    document.querySelector('.product-card__price').innerText = `$${this.product.FinalPrice}`;
-    document.querySelector('.product__color').innerText = this.product.Colors[0].ColorName;
-    document.querySelector('.product__description').innerHTML = this.product.DescriptionHtmlSimple;
-    document.querySelector('#addToCart').setAttribute('data-id', this.product.Id);
+    const element = document.querySelector(".product-detail");
+    element.innerHTML = productDetailsTemplate(this.product);
   }
+
+  initComments() {
+    const productId = this.product.Id;
+    const storageKey = `so-comments-${productId}`;
+
+    const listEl = document.getElementById("comments-list");
+    const formEl = document.getElementById("comment-form");
+    const inputEl = document.getElementById("comment-text");
+    const msgEl = document.getElementById("comment-msg");
+
+    if (!listEl || !formEl) return;
+
+    const render = () => {
+      const comments = getLocalStorage(storageKey) || [];
+      listEl.innerHTML = comments.length
+        ? comments
+            .map((c) => {
+              const date = new Date(c.timestamp).toLocaleString();
+              return `<p class="comment-item">
+                <span class="comment-date">${date}</span>
+                <br />${escapeHtml(c.text)}
+              </p>`;
+            })
+            .join("")
+        : `<p class="no-comments">No comments yet. Be the first!</p>`;
+    };
+
+    formEl.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = inputEl.value.trim();
+
+      if (!text) {
+        msgEl.textContent = "Please enter a comment.";
+        msgEl.className = "error";
+        return;
+      }
+
+      const comments = getLocalStorage(storageKey) || [];
+      comments.push({ text, timestamp: Date.now() });
+      setLocalStorage(storageKey, comments);
+
+      msgEl.textContent = "Comment added!";
+      msgEl.className = "success";
+      inputEl.value = "";
+      render();
+    });
+
+    render();
+  }
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function productDetailsTemplate(product) {
+  const discount = calcDiscount(
+    product.FinalPrice,
+    product.SuggestedRetailPrice
+  );
+  return `<section class="product-detail">
+    <h3>${product.Brand.Name}</h3>
+    <h2 class="divider">${product.NameWithoutBrand}</h2>
+    <img class="divider" src="${product.Images.PrimaryLarge}" alt="${product.Name}" />
+    <p class="product-card__price">${product.FinalPrice}</p>
+    ${discount > 0 ? `<p>Discounted at ${discount}% off!</p>` : ""}
+    <p class="product__color">${product.Colors[0].ColorName}</p>
+    <p class="product__description">${product.DescriptionHtmlSimple}</p>
+    <div class="product-detail__add">
+      <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
+    </div>
+  </section>`;
 }

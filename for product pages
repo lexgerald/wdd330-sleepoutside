@@ -1,0 +1,8 @@
+ package.json                 |   1 [32m+[m
+ src/css/style.css            |  41 [32m++++++++++++++[m[31m-[m
+ src/index.html               |   3 [32m++[m
+ src/js/ProductDetails.mjs    |  10 [32m++++[m
+ src/js/ProductList.mjs       |  14 [32m++++[m[31m-[m
+ src/product_pages/index.html | 120 [32m+++++++++++++++++++++[m[31m----------------------[m
+ vite.config.js               |   7 [32m+++[m
+ 7 files changed, 132 insertions(+), 64 deletions(-)

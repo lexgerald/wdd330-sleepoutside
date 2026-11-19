@@ -1,9 +1,15 @@
-console.log("Main.js loaded");
-
+import Alert from "./Alert.js";
+import { loadHeaderFooter } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
 
-// 1. Setup the Product List (only if the element exists on the page)
+loadHeaderFooter();
+
+// Initialize and render the alert on the index page
+const alert = new Alert();
+alert.render();
+
+// Setup the Product List
 const dataSource = new ProductData("tents");
 const listElement = document.querySelector(".product-list");
 
@@ -12,41 +18,40 @@ if (listElement) {
   tentList.init();
 }
 
-// 2. Setup the Newsletter Form
+// Newsletter sign-up
 function initNewsletter() {
   const form = document.getElementById("newsletter-form");
-  if (!form) return; // Stop if the form isn't on this page
+  if (!form) return;
 
   const emailInput = document.getElementById("newsletter-email");
   const message = document.getElementById("newsletter-msg");
 
   form.addEventListener("submit", (e) => {
-    e.preventDefault(); // STOP THE REFRESH!
+    e.preventDefault();
 
     const email = emailInput.value.trim();
-    
-    // Basic validation
+
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailPattern.test(email)) {
       message.textContent = "Please enter a valid email address.";
-      message.style.color = "red";
+      message.className = "error";
       emailInput.focus();
       return;
     }
 
-    // Save to localStorage
-    const list = JSON.parse(localStorage.getItem("newsletterEmails")) || [];
+    const list = JSON.parse(
+      localStorage.getItem("newsletterEmails") || "[]"
+    );
+
     if (!list.includes(email)) list.push(email);
+
     localStorage.setItem("newsletterEmails", JSON.stringify(list));
 
-    // Show success message
     message.textContent = `Thanks! ${email} is now subscribed.`;
-    message.style.color = "green";
+    message.className = "success";
+
     form.reset();
   });
 }
 
-// Call the function
-initNewsletter();
-
-console.log("Main.js loaded");
+document.addEventListener("DOMContentLoaded", initNewsletter);
