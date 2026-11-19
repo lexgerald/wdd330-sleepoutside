@@ -27,8 +27,9 @@ export default class ProductDetails {
         this.initComments();
     }
 
-    addProductToCart() {
-        const cartItems = getLocalStorage("so-cart") || [];
+        addProductToCart() {
+        let cartItems = getLocalStorage("so-cart") || [];
+        
         const existingItemIndex = cartItems.findIndex(
             (item) => item.Id === this.product.Id
         );
@@ -43,6 +44,7 @@ export default class ProductDetails {
 
         setLocalStorage("so-cart", cartItems);
         superscript();
+        alertMessage(`${this.product.NameWithoutBrand} added to cart!`, false);
     }
 
     renderProductDetails() {
@@ -104,11 +106,9 @@ export default class ProductDetails {
 // ADDED: escape user input before inserting into HTML
 function escapeHtml(str) {
     return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+        .replace(/(&)/g, "&amp;")
+        .replace(/(<)/g, "&lt;")
+        .replace(/(>)/g, "&gt;");
 }
 
 function productDetailsTemplate(product) {

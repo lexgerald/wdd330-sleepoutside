@@ -1,10 +1,9 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, alertMessage, removeAllAlerts } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 const services = new ExternalServices();
 
 function formDataToJSON(formElement) {
-  // convert the form data to a JSON object
   const formData = new FormData(formElement);
   const convertedJSON = {};
   formData.forEach((value, key) => {
@@ -15,7 +14,6 @@ function formDataToJSON(formElement) {
 
 function packageItems(items) {
   const simplifiedItems = items.map((item) => {
-    console.log(item);
     return {
       id: item.Id,
       price: item.FinalPrice,
@@ -43,19 +41,14 @@ export default class CheckoutProcess {
   }
 
   calculateItemSummary() {
-    // calculate and display the total amount of the items in the cart, and the number of items.
-    const summaryElement = document.querySelector(
-      this.outputSelector + " #cartTotal"
-    );
-    const itemNumElement = document.querySelector(
-      this.outputSelector + " #num-items"
-    );
+    const summaryElement = document.querySelector(this.outputSelector + " #cartTotal");
+    const itemNumElement = document.querySelector(this.outputSelector + " #num-items");
     const totalCount = this.list.reduce(
       (sum, item) => sum + (Number(item.quantity) || 1),
       0,
     );
     if (itemNumElement) itemNumElement.innerText = totalCount;
-    // calculate the total of all the items in the cart
+    
     this.itemTotal = this.list.reduce(
       (sum, item) => sum + (Number(item.FinalPrice) || 0) * (Number(item.quantity) || 1),
       0,
@@ -64,7 +57,6 @@ export default class CheckoutProcess {
   }
 
   calculateOrderTotal() {
-    // calculate the shipping and tax amounts. Then use them to along with the cart total to figure out the order total
     const totalCount = this.list.reduce(
       (sum, item) => sum + (Number(item.quantity) || 1),
       0,
@@ -76,12 +68,10 @@ export default class CheckoutProcess {
       parseFloat(this.tax) +
       parseFloat(this.shipping)
     )
-    // display the totals.
     this.displayOrderTotals();
   }
 
   displayOrderTotals() {
-    // once the totals are all calculated display them in the order summary page
     const tax = document.querySelector(`${this.outputSelector} #tax`);
     const shipping = document.querySelector(`${this.outputSelector} #shipping`);
     const orderTotal = document.querySelector(`${this.outputSelector} #orderTotal`);
@@ -95,23 +85,27 @@ export default class CheckoutProcess {
     const formElement = document.forms["checkout"];
     const order = formDataToJSON(formElement);
 
+    // 1. Force the correct test data into the object
     order.orderDate = new Date().toISOString();
-    order.orderTotal = this.orderTotal;
-    order.tax = this.tax;
-    order.shipping = this.shipping;
+    order.orderTotal = Number(this.orderTotal.toFixed(2));
+    order.tax = Number(this.tax.toFixed(2));
+    order.shipping = Number(this.shipping.toFixed(2));
     order.items = packageItems(this.list);
-    //console.log(order);
-
+    
     try {
       const response = await services.checkout(order);
-      console.log(response);
+      console.log("SUCCESS!", response);
       setLocalStorage("so-cart", []);
       location.assign("/checkout/success.html");
     } catch (err) {
       console.log(err);
-      removeAllAlerts();
-      for (let message in err.message) {
-        alertMessage(err.message(message));
+      if (err.name === 'servicesError') {
+        removeAllAlerts();
+        for (let key in err.message) {
+          alertMessage(err.message[key]);
+        }
+      } else {
+        alertMessage("An unknown error occurred. Please try again.");
       }
     }
   }
