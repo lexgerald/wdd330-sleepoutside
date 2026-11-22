@@ -1,7 +1,5 @@
 import Alert from "./Alert.js";
 import { loadHeaderFooter } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
-import ProductList from "./ProductList.mjs";
 
 
 loadHeaderFooter();
@@ -9,8 +7,6 @@ loadHeaderFooter();
 // Initialize and render the alert on the index page
 const alert = new Alert();
 alert.render();
-
-productList.init();
 
 
 // Newsletter sign-up
