@@ -13,7 +13,7 @@ export default class ProductDetails {
         this.product = {};
         this.dataSource = dataSource;
     }
-
+    
     async init() {
         this.product = await this.dataSource.findProductById(this.productId);
 
@@ -33,8 +33,9 @@ export default class ProductDetails {
         this.initComments();
     }
 
-    addProductToCart() {
-        const cartItems = getLocalStorage("so-cart") || [];
+        addProductToCart() {
+        let cartItems = getLocalStorage("so-cart") || [];
+        
         const existingItemIndex = cartItems.findIndex(
             (item) => item.Id === this.product.Id
         );
@@ -49,9 +50,7 @@ export default class ProductDetails {
 
         setLocalStorage("so-cart", cartItems);
         superscript();
-        animateCartIcon();
-
-        alertMessage(`${this.product.Name} added to your cart!`, false);
+        alertMessage(`${this.product.NameWithoutBrand} added to cart!`, false);
     }
 
     this.renderProductDetails();
@@ -139,12 +138,10 @@ export default class ProductDetails {
 }
 
 function escapeHtml(str) {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    return str
+        .replace(/(&)/g, "&amp;")
+        .replace(/(<)/g, "&lt;")
+        .replace(/(>)/g, "&gt;");
 }
 
 function productDetailsTemplate(product) {

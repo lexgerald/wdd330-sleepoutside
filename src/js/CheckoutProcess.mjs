@@ -1,9 +1,4 @@
-import {
-  getLocalStorage,
-  setLocalStorage,
-  alertMessage,
-  removeAllAlerts,
-} from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, alertMessage, removeAllAlerts } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 const services = new ExternalServices();
@@ -18,12 +13,15 @@ function formDataToJSON(formElement) {
 }
 
 function packageItems(items) {
-  return items.map((item) => ({
-    id: item.Id,
-    name: item.Name,
-    price: item.FinalPrice,
-    quantity: Number(item.quantity) || 1,
-  }));
+  const simplifiedItems = items.map((item) => {
+    return {
+      id: item.Id,
+      price: item.FinalPrice,
+      name: item.Name,
+      quantity: Number(item.quantity) || 1,
+    };
+  });
+  return simplifiedItems;
 }
 
 export default class CheckoutProcess {
@@ -43,17 +41,14 @@ export default class CheckoutProcess {
   }
 
   calculateItemSummary() {
-    const summaryElement = document.querySelector(
-      `${this.outputSelector} #cartTotal`
-    );
-    const itemNumElement = document.querySelector(
-      `${this.outputSelector} #num-items`
-    );
+    const summaryElement = document.querySelector(this.outputSelector + " #cartTotal");
+    const itemNumElement = document.querySelector(this.outputSelector + " #num-items");
     const totalCount = this.list.reduce(
       (sum, item) => sum + (Number(item.quantity) || 1),
       0
     );
     if (itemNumElement) itemNumElement.innerText = totalCount;
+    
     this.itemTotal = this.list.reduce(
       (sum, item) =>
         sum + (Number(item.FinalPrice) || 0) * (Number(item.quantity) || 1),
@@ -70,7 +65,11 @@ export default class CheckoutProcess {
     );
     this.tax = this.itemTotal * 0.06;
     this.shipping = totalCount > 0 ? 10 + (totalCount - 1) * 2 : 0;
-    this.orderTotal = this.itemTotal + this.tax + this.shipping;
+    this.orderTotal = (
+      parseFloat(this.itemTotal) +
+      parseFloat(this.tax) +
+      parseFloat(this.shipping)
+    )
     this.displayOrderTotals();
   }
 
@@ -91,33 +90,28 @@ export default class CheckoutProcess {
     const formElement = document.forms["checkout"];
     const order = formDataToJSON(formElement);
 
+    // 1. Force the correct test data into the object
     order.orderDate = new Date().toISOString();
-    order.orderTotal = this.orderTotal.toFixed(2);
-    order.tax = this.tax.toFixed(2);
-    order.shipping = this.shipping;
+    order.orderTotal = Number(this.orderTotal.toFixed(2));
+    order.tax = Number(this.tax.toFixed(2));
+    order.shipping = Number(this.shipping.toFixed(2));
     order.items = packageItems(this.list);
-
+    
     try {
       const response = await services.checkout(order);
-      console.log(response);
-      // Happy Path: clear cart + go to success page
+      console.log("SUCCESS!", response);
       setLocalStorage("so-cart", []);
       location.assign("/checkout/success.html");
     } catch (err) {
       // Unhappy Path: stay on form, show alerts, don't lose data
       console.log(err);
-      removeAllAlerts();
-
-      const errorMessage = err.message;
-
-      if (typeof errorMessage === "string") {
-        alertMessage(errorMessage, false);
-      } else if (errorMessage && typeof errorMessage === "object") {
-        Object.values(errorMessage).forEach((message) => {
-          alertMessage(message, false);
-        });
+      if (err.name === 'servicesError') {
+        removeAllAlerts();
+        for (let key in err.message) {
+          alertMessage(err.message[key]);
+        }
       } else {
-        alertMessage("Something went wrong while processing your order. Please try again.", false);
+        alertMessage("An unknown error occurred. Please try again.");
       }
     }
   }
