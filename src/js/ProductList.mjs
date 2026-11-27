@@ -24,6 +24,14 @@ function productCardTemplate(product) {
   </li>`;
 }
 
+// "sleeping-bags" -> "Sleeping Bags"
+function formatCategory(category) {
+  return category
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export default class ProductList {
   constructor(productCategory, dataSource, listElement) {
     this.productCategory = productCategory;
@@ -56,10 +64,7 @@ export default class ProductList {
 
     const titleElement = document.querySelector(".title");
     if (titleElement && this.productCategory) {
-      const formatted =
-        this.productCategory.charAt(0).toUpperCase() +
-        this.productCategory.slice(1);
-      titleElement.textContent = formatted.replace("-", " ");
+      titleElement.textContent = `Top Products: ${formatCategory(this.productCategory)}`;
     }
   }
 
@@ -73,9 +78,8 @@ export default class ProductList {
   renderBreadcrumb(list, label = null) {
     const breadcrumb = document.querySelector(".breadcrumb");
     if (!breadcrumb) return;
-    const category = label || this.productCategory || "Tents";
     const categoryName =
-      category.charAt(0).toUpperCase() + category.slice(1);
+      label || formatCategory(this.productCategory || "tents");
     const count = Array.isArray(list) ? list.length : 0;
     const countLabel = count === 1 ? "item" : "items";
     breadcrumb.innerHTML = `<span class="breadcrumb-category">${categoryName}</span> &rarr; (${count} ${countLabel})`;
