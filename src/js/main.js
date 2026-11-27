@@ -1,8 +1,8 @@
+
 import Alert from "./Alert.js";
 import { loadHeaderFooter } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductList from "./ProductList.mjs";
-
 
 loadHeaderFooter();
 
@@ -10,8 +10,11 @@ loadHeaderFooter();
 const alert = new Alert();
 alert.render();
 
+// Initialize homepage products
+const dataSource = new ExternalServices();
+const listElement = document.querySelector(".product-list");
+const productList = new ProductList("tents", dataSource, listElement);
 productList.init();
-
 
 // Newsletter sign-up
 function initNewsletter() {
@@ -25,7 +28,6 @@ function initNewsletter() {
     e.preventDefault();
     const email = emailInput.value.trim();
 
-    // Basic validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailPattern.test(email)) {
       message.textContent = "Please enter a valid email address.";
@@ -34,17 +36,14 @@ function initNewsletter() {
       return;
     }
 
-    // Save locally (so the feature "does something" without a backend)
     const list = JSON.parse(localStorage.getItem("newsletterEmails") || "[]");
     if (!list.includes(email)) list.push(email);
     localStorage.setItem("newsletterEmails", JSON.stringify(list));
 
-    // Confirm to user
     message.textContent = `Thanks! ${email} is now subscribed.`;
     message.className = "success";
     form.reset();
   });
 }
 
-// Run after DOM is ready
 document.addEventListener("DOMContentLoaded", initNewsletter);
