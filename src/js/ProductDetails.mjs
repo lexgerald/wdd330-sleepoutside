@@ -1,12 +1,11 @@
 import {
-  getLocalStorage,
-  setLocalStorage,
-  calcDiscount,
-  superscript,
-  animateCartIcon,
-  alertMessage,
+    getLocalStorage,
+    setLocalStorage,
+    calcDiscount,
+    superscript,
+    animateCartIcon,
+    alertMessage,
 } from "./utils.mjs";
-
 export default class ProductDetails {
 
     constructor(productId, dataSource) {
