@@ -1,6 +1,6 @@
+
 import Alert from "./Alert.js";
 import { loadHeaderFooter } from "./utils.mjs";
-
 
 loadHeaderFooter();
 
@@ -21,7 +21,6 @@ function initNewsletter() {
     e.preventDefault();
     const email = emailInput.value.trim();
 
-    // Basic validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailPattern.test(email)) {
       message.textContent = "Please enter a valid email address.";
@@ -30,17 +29,14 @@ function initNewsletter() {
       return;
     }
 
-    // Save locally (so the feature "does something" without a backend)
     const list = JSON.parse(localStorage.getItem("newsletterEmails") || "[]");
     if (!list.includes(email)) list.push(email);
     localStorage.setItem("newsletterEmails", JSON.stringify(list));
 
-    // Confirm to user
     message.textContent = `Thanks! ${email} is now subscribed.`;
     message.className = "success";
     form.reset();
   });
 }
 
-// Run after DOM is ready
 document.addEventListener("DOMContentLoaded", initNewsletter);

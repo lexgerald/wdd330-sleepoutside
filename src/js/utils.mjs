@@ -38,12 +38,11 @@ export function renderListWithTemplate(
   parentElement,
   list,
   position = "afterbegin",
-  clear = false,
+  clear = false
 ) {
   if (clear) {
     parentElement.innerHTML = "";
   }
-
   const htmlStrings = list.map(templateFn);
   const combinedHtml = htmlStrings.join("");
   parentElement.insertAdjacentHTML(position, combinedHtml);
@@ -94,6 +93,9 @@ export function alertMessage(message, scroll = true, duration = 3000) {
 
   alert.append(paragraph, closeButton);
 
+  const main = document.querySelector("main");
+  if (!main) return;
+
   alert.addEventListener("click", function (e) {
     if (e.target.tagName === "SPAN") {
       this.remove();
@@ -104,12 +106,16 @@ export function alertMessage(message, scroll = true, duration = 3000) {
   main.prepend(alert);
 
   if (scroll) window.scrollTo(0, 0);
+
+  if (duration) {
+    setTimeout(() => alert.remove(), duration);
+  }
 }
 
 // Remove all existing alert messages
 export function removeAllAlerts() {
   const alerts = document.querySelectorAll(".alert");
-  alerts.forEach((alert) => document.querySelector("main").removeChild(alert));
+  alerts.forEach((alert) => alert.remove());
 }
 
 export function superscript() {
@@ -119,7 +125,7 @@ export function superscript() {
   const cartItems = getLocalStorage("so-cart") || [];
   const count = cartItems.reduce(
     (total, item) => total + (Number(item.quantity) || 1),
-    0,
+    0
   );
 
   if (count === 0) {
@@ -144,6 +150,6 @@ export function animateCartIcon() {
   cartIcon.addEventListener(
     "animationend",
     () => cartIcon.classList.remove("cart-animate"),
-    { once: true },
+    { once: true }
   );
 }

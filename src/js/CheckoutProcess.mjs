@@ -9,7 +9,6 @@ import ExternalServices from "./ExternalServices.mjs";
 const services = new ExternalServices();
 
 function formDataToJSON(formElement) {
-  // convert the form data to a JSON object
   const formData = new FormData(formElement);
   const convertedJSON = {};
   formData.forEach((value, key) => {
@@ -19,16 +18,12 @@ function formDataToJSON(formElement) {
 }
 
 function packageItems(items) {
-  const simplifiedItems = items.map((item) => {
-    console.log(item);
-    return {
-      id: item.Id,
-      price: item.FinalPrice,
-      name: item.Name,
-      quantity: Number(item.quantity) || 1,
-    };
-  });
-  return simplifiedItems;
+  return items.map((item) => ({
+    id: item.Id,
+    name: item.Name,
+    price: item.FinalPrice,
+    quantity: Number(item.quantity) || 1,
+  }));
 }
 
 export default class CheckoutProcess {
@@ -48,52 +43,48 @@ export default class CheckoutProcess {
   }
 
   calculateItemSummary() {
-    // calculate and display the total amount of the items in the cart, and the number of items.
     const summaryElement = document.querySelector(
-      this.outputSelector + " #cartTotal"
+      `${this.outputSelector} #cartTotal`
     );
     const itemNumElement = document.querySelector(
-      this.outputSelector + " #num-items"
+      `${this.outputSelector} #num-items`
     );
     const totalCount = this.list.reduce(
       (sum, item) => sum + (Number(item.quantity) || 1),
-      0,
+      0
     );
     if (itemNumElement) itemNumElement.innerText = totalCount;
-    // calculate the total of all the items in the cart
     this.itemTotal = this.list.reduce(
-      (sum, item) => sum + (Number(item.FinalPrice) || 0) * (Number(item.quantity) || 1),
-      0,
+      (sum, item) =>
+        sum + (Number(item.FinalPrice) || 0) * (Number(item.quantity) || 1),
+      0
     );
-    if (summaryElement) summaryElement.innerText = `$${this.itemTotal.toFixed(2)}`;
+    if (summaryElement)
+      summaryElement.innerText = `$${this.itemTotal.toFixed(2)}`;
   }
 
   calculateOrderTotal() {
-    // calculate the shipping and tax amounts. Then use them to along with the cart total to figure out the order total
     const totalCount = this.list.reduce(
       (sum, item) => sum + (Number(item.quantity) || 1),
-      0,
+      0
     );
-    this.tax = (this.itemTotal * .06);
+    this.tax = this.itemTotal * 0.06;
     this.shipping = totalCount > 0 ? 10 + (totalCount - 1) * 2 : 0;
-    this.orderTotal = (
-      parseFloat(this.itemTotal) +
-      parseFloat(this.tax) +
-      parseFloat(this.shipping)
-    )
-    // display the totals.
+    this.orderTotal = this.itemTotal + this.tax + this.shipping;
     this.displayOrderTotals();
   }
 
   displayOrderTotals() {
-    // once the totals are all calculated display them in the order summary page
     const tax = document.querySelector(`${this.outputSelector} #tax`);
-    const shipping = document.querySelector(`${this.outputSelector} #shipping`);
-    const orderTotal = document.querySelector(`${this.outputSelector} #orderTotal`);
-
-    tax.innerText = `$${this.tax.toFixed(2)}`;
-    shipping.innerText = `$${this.shipping.toFixed(2)}`;
-    orderTotal.innerText = `$${this.orderTotal.toFixed(2)}`;
+    const shipping = document.querySelector(
+      `${this.outputSelector} #shipping`
+    );
+    const orderTotal = document.querySelector(
+      `${this.outputSelector} #orderTotal`
+    );
+    if (tax) tax.innerText = `$${this.tax.toFixed(2)}`;
+    if (shipping) shipping.innerText = `$${this.shipping.toFixed(2)}`;
+    if (orderTotal) orderTotal.innerText = `$${this.orderTotal.toFixed(2)}`;
   }
 
   async checkout() {
@@ -101,18 +92,19 @@ export default class CheckoutProcess {
     const order = formDataToJSON(formElement);
 
     order.orderDate = new Date().toISOString();
-    order.orderTotal = this.orderTotal;
-    order.tax = this.tax;
+    order.orderTotal = this.orderTotal.toFixed(2);
+    order.tax = this.tax.toFixed(2);
     order.shipping = this.shipping;
     order.items = packageItems(this.list);
-    //console.log(order);
 
     try {
       const response = await services.checkout(order);
       console.log(response);
+      // Happy Path: clear cart + go to success page
       setLocalStorage("so-cart", []);
       location.assign("/checkout/success.html");
     } catch (err) {
+      // Unhappy Path: stay on form, show alerts, don't lose data
       console.log(err);
       removeAllAlerts();
 
