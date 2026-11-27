@@ -2,17 +2,17 @@
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
 }
-// or a more concise version if you are into that sort of thing:
-// export const qs = (selector, parent = document) => parent.querySelector(selector);
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
+
 // save data to local storage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
+
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
@@ -21,15 +21,14 @@ export function setClick(selector, callback) {
   });
   qs(selector).addEventListener("click", callback);
 }
+
 // Get product via query string
 export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const product = urlParams.get(param);
-
-// This checks if product exists
   if (product) return product;
-  return null
+  return null;
 }
 
 export function renderListWithTemplate(
@@ -37,12 +36,11 @@ export function renderListWithTemplate(
   parentElement,
   list,
   position = "afterbegin",
-  clear = false,
+  clear = false
 ) {
   if (clear) {
     parentElement.innerHTML = "";
   }
-
   const htmlStrings = list.map(templateFn);
   const combinedHtml = htmlStrings.join("");
   parentElement.insertAdjacentHTML(position, combinedHtml);
@@ -85,20 +83,27 @@ export function alertMessage(message, scroll = true, duration = 3000) {
   alert.classList.add("alert");
   alert.innerHTML = `<p>${message}</p><span>X</span>`;
 
+  const main = document.querySelector("main");
+  if (!main) return;
+
   alert.addEventListener("click", function (e) {
     if (e.target.tagName == "SPAN") {
-      main.removeChild(this);
+      alert.remove();
     }
   });
-  const main = document.querySelector("main");
+
   main.prepend(alert);
 
   if (scroll) window.scrollTo(0, 0);
+
+  if (duration) {
+    setTimeout(() => alert.remove(), duration);
+  }
 }
 
 export function removeAllAlerts() {
   const alerts = document.querySelectorAll(".alert");
-  alerts.forEach((alert) => document.querySelector("main").removeChild(alert));
+  alerts.forEach((alert) => alert.remove());
 }
 
 export function superscript() {
@@ -107,14 +112,31 @@ export function superscript() {
   const cartItems = getLocalStorage("so-cart") || [];
   const count = cartItems.reduce(
     (total, item) => total + (Number(item.quantity) || 1),
-    0,
+    0
   );
 
   if (count === 0) {
     cartNum.classList.add("hide");
-  }
-  else {
+  } else {
     cartNum.classList.remove("hide");
     cartNum.innerHTML = `${count}`;
   }
+}
+
+// Animate the cart (backpack) icon when an item is added
+export function animateCartIcon() {
+  const cartIcon = document.querySelector(".cart");
+  if (!cartIcon) return;
+
+  // Remove the class first so the animation can play again on every click
+  cartIcon.classList.remove("cart-animate");
+  void cartIcon.offsetWidth; // forces the browser to restart the animation
+  cartIcon.classList.add("cart-animate");
+
+  // Clean up when the animation finishes
+  cartIcon.addEventListener(
+    "animationend",
+    () => cartIcon.classList.remove("cart-animate"),
+    { once: true }
+  );
 }

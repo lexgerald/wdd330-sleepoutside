@@ -7,89 +7,65 @@
     <link rel="stylesheet" href="../css/style.css" />
     <script src="../js/checkout.js" type="module"></script>
   </head>
-
   <body>
     <header class="divider" id="main-header"></header>
-
     <main class="divider checkout">
       <h2 class="checkout__title">Review &amp; Place Your Order</h2>
-
       <section class="checkout-form">
         <form name="checkout" class="checkout-form__form">
-          <input type="hidden" name="orderDate" id="orderDate" />
-
-          <!-- Two cards side by side -->
           <div class="checkout-form__row">
             <fieldset class="card">
               <legend>Shipping Information</legend>
-
               <div class="field">
                 <label for="fname">First Name</label>
                 <input type="text" name="fname" id="fname" autocomplete="given-name" required />
               </div>
-
               <div class="field">
                 <label for="lname">Last Name</label>
                 <input type="text" name="lname" id="lname" autocomplete="family-name" required />
               </div>
-
               <div class="field">
                 <label for="street">Address</label>
                 <input type="text" name="street" id="street" autocomplete="street-address" required />
               </div>
-
               <div class="field">
                 <label for="city">City</label>
                 <input type="text" name="city" id="city" autocomplete="address-level2" required />
               </div>
-
               <div class="field">
                 <label for="state">State</label>
-                <input type="text" name="state" id="state" autocomplete="address-level1" required />
+                <input type="text" name="state" id="state" autocomplete="address-level1" placeholder="ID" minlength="2" maxlength="2" pattern="[A-Za-z]{2}" title="Enter 2-letter state code, e.g. ID" required />
               </div>
-
               <div class="field">
                 <label for="zip">Zip</label>
-                <input type="text" name="zip" id="zip" inputmode="numeric" autocomplete="postal-code" required />
+                <input type="text" name="zip" id="zip" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}" maxlength="5" title="Enter 5-digit zip code" required />
               </div>
             </fieldset>
 
             <fieldset class="card">
               <legend>Payment</legend>
-
               <div class="field">
                 <label for="cardNumber">Card Number</label>
-                <input type="text" name="cardNumber" id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
+                <input type="text" name="cardNumber" id="cardNumber" inputmode="numeric" autocomplete="cc-number" pattern="[0-9]{16}" maxlength="16" title="Enter 16-digit card number, no spaces" placeholder="1234123412341234" required />
               </div>
-
               <div class="field">
                 <label for="expiration">Expiration</label>
-                <input type="text" name="expiration" id="expiration" autocomplete="cc-exp" placeholder="MM/YY" required />
+                <input type="text" name="expiration" id="expiration" autocomplete="cc-exp" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" placeholder="MM/YY" title="Enter as MM/YY, e.g. 12/28" required />
               </div>
-
               <div class="field">
                 <label for="code">CVV</label>
-                <input type="text" name="code" id="code" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required />
+                <input type="text" name="code" id="code" inputmode="numeric" autocomplete="cc-csc" pattern="[0-9]{3,4}" maxlength="4" title="Enter 3 or 4 digit security code" placeholder="123" required />
               </div>
             </fieldset>
           </div>
 
-          <!-- Summary + button -->
           <fieldset class="card checkout-summary">
             <legend>Order Summary</legend>
             <div class="order_summary">
-              <div>Items</div>
-              <div id="num-items"></div>
-
-              <div>Subtotal</div>
-              <div id="cartTotal"></div>
-
-              <div>Tax</div>
-              <div id="tax"></div>
-
-              <div>Shipping</div>
-              <div id="shipping"></div>
-
+              <div>Items</div><div id="num-items"></div>
+              <div>Subtotal</div><div id="cartTotal"></div>
+              <div>Tax</div><div id="tax"></div>
+              <div>Shipping</div><div id="shipping"></div>
               <div class="order_summary__total">Total</div>
               <div id="orderTotal" class="order_summary__total"></div>
             </div>
@@ -99,7 +75,6 @@
         </form>
       </section>
     </main>
-
     <footer id="main-footer"></footer>
   </body>
 </html>

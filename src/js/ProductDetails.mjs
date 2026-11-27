@@ -1,4 +1,11 @@
-import { getLocalStorage, setLocalStorage, calcDiscount, superscript } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  calcDiscount,
+  superscript,
+  animateCartIcon,
+  alertMessage,
+} from "./utils.mjs";
 
 export default class ProductDetails {
 
@@ -47,63 +54,90 @@ export default class ProductDetails {
         alertMessage(`${this.product.NameWithoutBrand} added to cart!`, false);
     }
 
-    renderProductDetails() {
-        const element = document.querySelector(".product-detail");
-        element.innerHTML = productDetailsTemplate(this.product);
+    this.renderProductDetails();
+    document
+      .getElementById("addToCart")
+      .addEventListener("click", this.addProductToCart.bind(this));
+
+    this.initComments();
+  }
+
+  addProductToCart() {
+    const cartItems = getLocalStorage("so-cart") || [];
+    const existingItemIndex = cartItems.findIndex(
+      (item) => item.Id === this.product.Id
+    );
+
+    if (existingItemIndex > -1) {
+      cartItems[existingItemIndex].quantity =
+        (Number(cartItems[existingItemIndex].quantity) || 1) + 1;
+    } else {
+      const productToAdd = { ...this.product, quantity: 1 };
+      cartItems.push(productToAdd);
     }
 
-    // ===== ADDED: comments subsystem =====
-    initComments() {
-        const productId = this.product.Id;
-        const storageKey = `so-comments-${productId}`;
+    setLocalStorage("so-cart", cartItems);
+    superscript();
+    animateCartIcon();
+    // W04 Individual Stretch: give feedback
+    alertMessage("Item added to cart!");
+  }
 
-        const listEl  = document.getElementById("comments-list");
-        const formEl  = document.getElementById("comment-form");
-        const inputEl = document.getElementById("comment-text");
-        const msgEl   = document.getElementById("comment-msg");
+  renderProductDetails() {
+    const element = document.querySelector(".product-detail");
+    element.innerHTML = productDetailsTemplate(this.product);
+  }
 
-        if (!listEl || !formEl) return; // safety: HTML not present
+  initComments() {
+    const productId = this.product.Id;
+    const storageKey = `so-comments-${productId}`;
 
-        const render = () => {
-            const comments = getLocalStorage(storageKey) || [];
-            listEl.innerHTML = comments.length
-                ? comments
-                      .map((c) => {
-                          const date = new Date(c.timestamp).toLocaleString();
-                          return `<p class="comment-item">
-                              <span class="comment-date">${date}</span>
-                              <br />${escapeHtml(c.text)}
-                          </p>`;
-                      })
-                      .join("")
-                : `<p class="no-comments">No comments yet. Be the first!</p>`;
-        };
+    const listEl = document.getElementById("comments-list");
+    const formEl = document.getElementById("comment-form");
+    const inputEl = document.getElementById("comment-text");
+    const msgEl = document.getElementById("comment-msg");
 
-        formEl.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const text = inputEl.value.trim();
+    if (!listEl || !formEl) return;
 
-            if (!text) {
-                msgEl.textContent = "Please enter a comment.";
-                msgEl.className = "error";
-                return;
-            }
+    const render = () => {
+      const comments = getLocalStorage(storageKey) || [];
+      listEl.innerHTML = comments.length
+        ? comments
+            .map((c) => {
+              const date = new Date(c.timestamp).toLocaleString();
+              return `<p class="comment-item">
+                <span class="comment-date">${date}</span>
+                <br />${escapeHtml(c.text)}
+              </p>`;
+            })
+            .join("")
+        : `<p class="no-comments">No comments yet. Be the first!</p>`;
+    };
 
-            const comments = getLocalStorage(storageKey) || [];
-            comments.push({ text, timestamp: Date.now() });
-            setLocalStorage(storageKey, comments);
+    formEl.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = inputEl.value.trim();
 
-            msgEl.textContent = "Comment added!";
-            msgEl.className = "success";
-            inputEl.value = "";
-            render();
-        });
+      if (!text) {
+        msgEl.textContent = "Please enter a comment.";
+        msgEl.className = "error";
+        return;
+      }
 
-        render();
-    }
+      const comments = getLocalStorage(storageKey) || [];
+      comments.push({ text, timestamp: Date.now() });
+      setLocalStorage(storageKey, comments);
+
+      msgEl.textContent = "Comment added!";
+      msgEl.className = "success";
+      inputEl.value = "";
+      render();
+    });
+
+    render();
+  }
 }
 
-// ADDED: escape user input before inserting into HTML
 function escapeHtml(str) {
     return str
         .replace(/(&)/g, "&amp;")
@@ -112,29 +146,20 @@ function escapeHtml(str) {
 }
 
 function productDetailsTemplate(product) {
-    const discount = calcDiscount(product.FinalPrice, product.SuggestedRetailPrice);
-    return `<section class="product-detail">
-        <h3>${product.Brand.Name}</h3>
-
-        <h2 class="divider">${product.NameWithoutBrand}</h2>
-
-        <img
-          class="divider"
-          src="${product.Images.PrimaryLarge}"
-          alt="${product.Name}"
-        />
-
-        <p class="product-card__price">${product.FinalPrice}</p>
-
-        ${discount > 0 ? `<p>Discounted at ${discount}% off!</p>` : ""}
-
-        <p class="product__color">${product.Colors[0].ColorName}</p>
-
-        <p class="product__description">
-          ${product.DescriptionHtmlSimple}
-        </p>
-        <div class="product-detail__add">
-          <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
-        </div>
-      </section>`;
+  const discount = calcDiscount(
+    product.FinalPrice,
+    product.SuggestedRetailPrice
+  );
+  return `<section class="product-detail">
+    <h3>${product.Brand.Name}</h3>
+    <h2 class="divider">${product.NameWithoutBrand}</h2>
+    <img class="divider" src="${product.Images.PrimaryLarge}" alt="${product.Name}" />
+    <p class="product-card__price">${product.FinalPrice}</p>
+    ${discount > 0 ? `<p>Discounted at ${discount}% off!</p>` : ""}
+    <p class="product__color">${product.Colors[0].ColorName}</p>
+    <p class="product__description">${product.DescriptionHtmlSimple}</p>
+    <div class="product-detail__add">
+      <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
+    </div>
+  </section>`;
 }
