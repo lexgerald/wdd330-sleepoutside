@@ -8,7 +8,6 @@ loadHeaderFooter();
 const alert = new Alert();
 alert.render();
 
-
 // Newsletter sign-up
 function initNewsletter() {
   const form = document.getElementById("newsletter-form");
@@ -39,4 +38,5 @@ function initNewsletter() {
   });
 }
 
+// Run after DOM is ready
 document.addEventListener("DOMContentLoaded", initNewsletter);
