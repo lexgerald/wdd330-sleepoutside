@@ -1,3 +1,4 @@
+
 import Alert from "./Alert.js";
 import { loadHeaderFooter } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";

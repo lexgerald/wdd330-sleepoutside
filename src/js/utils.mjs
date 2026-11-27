@@ -1,3 +1,4 @@
+
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
@@ -27,6 +28,7 @@ export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const product = urlParams.get(param);
+
   if (product) return product;
   return null;
 }
@@ -78,20 +80,29 @@ export async function loadHeaderFooter() {
   superscript();
 }
 
+// Display an alert message at the top of the page
 export function alertMessage(message, scroll = true, duration = 3000) {
   const alert = document.createElement("div");
   alert.classList.add("alert");
-  alert.innerHTML = `<p>${message}</p><span>X</span>`;
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = message;
+
+  const closeButton = document.createElement("span");
+  closeButton.textContent = "X";
+
+  alert.append(paragraph, closeButton);
 
   const main = document.querySelector("main");
   if (!main) return;
 
   alert.addEventListener("click", function (e) {
-    if (e.target.tagName == "SPAN") {
-      alert.remove();
+    if (e.target.tagName === "SPAN") {
+      this.remove();
     }
   });
 
+  const main = document.querySelector("main");
   main.prepend(alert);
 
   if (scroll) window.scrollTo(0, 0);
@@ -101,6 +112,7 @@ export function alertMessage(message, scroll = true, duration = 3000) {
   }
 }
 
+// Remove all existing alert messages
 export function removeAllAlerts() {
   const alerts = document.querySelectorAll(".alert");
   alerts.forEach((alert) => alert.remove());
@@ -109,6 +121,7 @@ export function removeAllAlerts() {
 export function superscript() {
   const cartNum = document.querySelector(".cart .superscript");
   if (!cartNum) return;
+
   const cartItems = getLocalStorage("so-cart") || [];
   const count = cartItems.reduce(
     (total, item) => total + (Number(item.quantity) || 1),
@@ -130,7 +143,7 @@ export function animateCartIcon() {
 
   // Remove the class first so the animation can play again on every click
   cartIcon.classList.remove("cart-animate");
-  void cartIcon.offsetWidth; // forces the browser to restart the animation
+  void cartIcon.offsetWidth;
   cartIcon.classList.add("cart-animate");
 
   // Clean up when the animation finishes

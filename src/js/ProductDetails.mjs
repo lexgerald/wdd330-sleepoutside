@@ -1,34 +1,57 @@
 import {
-  getLocalStorage,
-  setLocalStorage,
-  calcDiscount,
-  superscript,
-  animateCartIcon,
-  alertMessage,
+    getLocalStorage,
+    setLocalStorage,
+    calcDiscount,
+    superscript,
+    animateCartIcon,
+    alertMessage,
 } from "./utils.mjs";
-
 export default class ProductDetails {
-  constructor(productId, dataSource) {
-    this.productId = productId;
-    this.product = {};
-    this.dataSource = dataSource;
-  }
 
-  async init() {
-    this.product = await this.dataSource.findProductById(this.productId);
+    constructor(productId, dataSource) {
+        this.productId = productId;
+        this.product = {};
+        this.dataSource = dataSource;
+    }
 
-    const breadcrumb = document.querySelector(".breadcrumb");
-    if (breadcrumb) {
-      const rawCategory =
-        this.product?.Category || this.dataSource?.category || "tents";
-      const categoryName =
-        rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
-      const categorySlug = rawCategory.toLowerCase();
-      const linkTarget =
-        categorySlug === "tents"
-          ? "../tents/index.html"
-          : `../product_listing/index.html?category=${categorySlug}`;
-      breadcrumb.innerHTML = `<a href="${linkTarget}">${categoryName}</a>`;
+    async init() {
+        this.product = await this.dataSource.findProductById(this.productId);
+
+        const breadcrumb = document.querySelector(".breadcrumb");
+        if (breadcrumb) {
+            const rawCategory = this.product?.Category || this.dataSource?.category || "tents";
+            const categoryName = rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
+            const categorySlug = rawCategory.toLowerCase();
+            const linkTarget = categorySlug === "tents" ? "../tents/index.html" : `../product_listing/index.html?category=${categorySlug}`;
+            breadcrumb.innerHTML = `<a href="${linkTarget}">${categoryName}</a>`;
+        }
+
+        this.renderProductDetails();
+        document.getElementById("addToCart").addEventListener("click", this.addProductToCart.bind(this));
+
+        // ADDED: init comments once the product is on the page
+        this.initComments();
+    }
+
+    addProductToCart() {
+        const cartItems = getLocalStorage("so-cart") || [];
+        const existingItemIndex = cartItems.findIndex(
+            (item) => item.Id === this.product.Id
+        );
+
+        if (existingItemIndex > -1) {
+            cartItems[existingItemIndex].quantity =
+                (Number(cartItems[existingItemIndex].quantity) || 1) + 1;
+        } else {
+            const productToAdd = { ...this.product, quantity: 1 };
+            cartItems.push(productToAdd);
+        }
+
+        setLocalStorage("so-cart", cartItems);
+        superscript();
+        animateCartIcon();
+
+        alertMessage(`${this.product.Name} added to your cart!`, false);
     }
 
     this.renderProductDetails();
