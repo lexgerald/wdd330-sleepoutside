@@ -1,8 +1,6 @@
 
 import Alert from "./Alert.js";
 import { loadHeaderFooter } from "./utils.mjs";
-import ExternalServices from "./ExternalServices.mjs";
-import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
@@ -10,11 +8,6 @@ loadHeaderFooter();
 const alert = new Alert();
 alert.render();
 
-// Initialize homepage products
-const dataSource = new ExternalServices();
-const listElement = document.querySelector(".product-list");
-const productList = new ProductList("tents", dataSource, listElement);
-productList.init();
 
 // Newsletter sign-up
 function initNewsletter() {

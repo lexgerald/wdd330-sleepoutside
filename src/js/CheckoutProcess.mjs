@@ -107,9 +107,18 @@ export default class CheckoutProcess {
       // Unhappy Path: stay on form, show alerts, don't lose data
       console.log(err);
       removeAllAlerts();
-      const message = err.message || {};
-      // Server sends back { cardNumber: "Invalid..." } etc.
-      Object.values(message).forEach((msg) => alertMessage(msg));
+
+      const errorMessage = err.message;
+
+      if (typeof errorMessage === "string") {
+        alertMessage(errorMessage, false);
+      } else if (errorMessage && typeof errorMessage === "object") {
+        Object.values(errorMessage).forEach((message) => {
+          alertMessage(message, false);
+        });
+      } else {
+        alertMessage("Something went wrong while processing your order. Please try again.", false);
+      }
     }
   }
 }
