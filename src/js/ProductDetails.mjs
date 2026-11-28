@@ -1,56 +1,34 @@
 import {
-    getLocalStorage,
-    setLocalStorage,
-    calcDiscount,
-    superscript,
-    animateCartIcon,
-    alertMessage,
+  getLocalStorage,
+  setLocalStorage,
+  calcDiscount,
+  superscript,
+  animateCartIcon,
+  alertMessage,
 } from "./utils.mjs";
+
 export default class ProductDetails {
+  constructor(productId, dataSource) {
+    this.productId = productId;
+    this.product = {};
+    this.dataSource = dataSource;
+  }
 
-    constructor(productId, dataSource) {
-        this.productId = productId;
-        this.product = {};
-        this.dataSource = dataSource;
-    }
-    
-    async init() {
-        this.product = await this.dataSource.findProductById(this.productId);
+  async init() {
+    this.product = await this.dataSource.findProductById(this.productId);
 
-        const breadcrumb = document.querySelector(".breadcrumb");
-        if (breadcrumb) {
-            const rawCategory = this.product?.Category || this.dataSource?.category || "tents";
-            const categoryName = rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
-            const categorySlug = rawCategory.toLowerCase();
-            const linkTarget = categorySlug === "tents" ? "../tents/index.html" : `../product_listing/index.html?category=${categorySlug}`;
-            breadcrumb.innerHTML = `<a href="${linkTarget}">${categoryName}</a>`;
-        }
-
-        this.renderProductDetails();
-        document.getElementById("addToCart").addEventListener("click", this.addProductToCart.bind(this));
-
-        // ADDED: init comments once the product is on the page
-        this.initComments();
-    }
-
-        addProductToCart() {
-        let cartItems = getLocalStorage("so-cart") || [];
-        
-        const existingItemIndex = cartItems.findIndex(
-            (item) => item.Id === this.product.Id
-        );
-
-        if (existingItemIndex > -1) {
-            cartItems[existingItemIndex].quantity =
-                (Number(cartItems[existingItemIndex].quantity) || 1) + 1;
-        } else {
-            const productToAdd = { ...this.product, quantity: 1 };
-            cartItems.push(productToAdd);
-        }
-
-        setLocalStorage("so-cart", cartItems);
-        superscript();
-        alertMessage(`${this.product.NameWithoutBrand} added to cart!`, false);
+    const breadcrumb = document.querySelector(".breadcrumb");
+    if (breadcrumb) {
+      const rawCategory =
+        this.product?.Category || this.dataSource?.category || "tents";
+      const categoryName =
+        rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
+      const categorySlug = rawCategory.toLowerCase();
+      const linkTarget =
+        categorySlug === "tents"
+          ? "../tents/index.html"
+          : `../product_listing/index.html?category=${categorySlug}`;
+      breadcrumb.innerHTML = `<a href="${linkTarget}">${categoryName}</a>`;
     }
 
     this.renderProductDetails();
@@ -58,6 +36,7 @@ export default class ProductDetails {
       .getElementById("addToCart")
       .addEventListener("click", this.addProductToCart.bind(this));
 
+    // ADDED: init comments once the product is on the page
     this.initComments();
   }
 
@@ -138,10 +117,10 @@ export default class ProductDetails {
 }
 
 function escapeHtml(str) {
-    return str
-        .replace(/(&)/g, "&amp;")
-        .replace(/(<)/g, "&lt;")
-        .replace(/(>)/g, "&gt;");
+  return str
+    .replace(/(&)/g, "&amp;")
+    .replace(/(<)/g, "&lt;")
+    .replace(/(>)/g, "&gt;");
 }
 
 function productDetailsTemplate(product) {
@@ -153,7 +132,7 @@ function productDetailsTemplate(product) {
     <h3>${product.Brand.Name}</h3>
     <h2 class="divider">${product.NameWithoutBrand}</h2>
     <img class="divider" src="${product.Images.PrimaryLarge}" alt="${product.Name}" />
-    <p class="product-card__price">${product.FinalPrice}</p>
+    <p class="product-card__price">$${product.FinalPrice}</p>
     ${discount > 0 ? `<p>Discounted at ${discount}% off!</p>` : ""}
     <p class="product__color">${product.Colors[0].ColorName}</p>
     <p class="product__description">${product.DescriptionHtmlSimple}</p>

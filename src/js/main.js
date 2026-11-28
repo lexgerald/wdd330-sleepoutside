@@ -1,7 +1,6 @@
-
 import Alert from "./Alert.js";
 import { loadHeaderFooter } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
@@ -11,11 +10,11 @@ const alert = new Alert();
 alert.render();
 
 // Setup the Product List
-const dataSource = new ProductData("tents");
+const dataSource = new ExternalServices();
 const listElement = document.querySelector(".product-list");
 
 if (listElement) {
-  const tentList = new ProductList("Tents", dataSource, listElement);
+  const tentList = new ProductList("tents", dataSource, listElement);
   tentList.init();
 }
 
